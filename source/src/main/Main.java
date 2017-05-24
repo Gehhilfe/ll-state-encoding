@@ -1,7 +1,11 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.Parser;
 import lowlevel.ParsedFile;
+import lowlevel.State;
 
 /**
  * Main class
@@ -9,7 +13,7 @@ import lowlevel.ParsedFile;
  *
  */
 public class Main {
-	
+
 	public static void main(String[] args) {
 				
 		if(args.length>0){
@@ -22,8 +26,10 @@ public class Main {
 			
 			// Representation of the FSM
 			ParsedFile fsm = p.getParsedFile();
+			MinimalCoverFinder finder = new MinimalCoverFinder(fsm);
+			finder.compute();
 			
-
+			System.out.println();
 			
 			// TODO - here you go 
 

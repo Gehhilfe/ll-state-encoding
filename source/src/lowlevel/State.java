@@ -74,7 +74,7 @@ public class State {
 		outputMap.put(input, output);
 	}
 	
-	public State getNextState(int input){
+	public State getNextState(long input){
 		return nextStateMap.get(input);
 	}
 	
@@ -154,5 +154,9 @@ public class State {
 		}
 		
 		return outputs;
+	}
+	
+	public List<Long> getInputs() {
+		return inputs;
 	}
 }
