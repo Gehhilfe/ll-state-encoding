@@ -53,15 +53,13 @@ public class MinimalCoverFinder {
 		return false;
 	};
 	
-	
-	
 	public MinimalCoverFinder(ParsedFile fsm) {
 		this.fsm = fsm;
 	}
 	
-	public void compute() {
+	public List<long[]> compute() {
 		OneHotEncoder encoder = new OneHotEncoder();
-		List<long[]> lines = new ArrayList();
+		List<long[]> lines = new ArrayList<long[]>();
 		for(State s:fsm.getStates()) {
 			for(Long input:s.getInputs()) {
 				
@@ -89,6 +87,8 @@ public class MinimalCoverFinder {
 			}
 			System.out.print("\n");
 		}
+		
+		return newLines;
 	}
 	
 	private List<long[]> min(List<long[]> lines) {
