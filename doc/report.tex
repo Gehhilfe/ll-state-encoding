@@ -1,0 +1,108 @@
+\documentclass[parskip,11pt,nochapterpage,bigchapter,linedtoc,colorback,accentcolor=tud1d,openany]{tudreport}
+%\usepackage{ngerman}
+\usepackage[english]{babel}
+
+\usepackage[stable]{footmisc}
+\usepackage[ngerman]{hyperref}
+
+\usepackage{graphics}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{hhline}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\graphicspath{{graphics/}}
+
+\definecolor{codegray}{gray}{0.90}
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+
+\lstdefinestyle{rawtext}{
+  belowcaptionskip=4pt,
+  captionpos=b
+  breaklines=true,
+  frame=N,
+  xleftmargin=\parindent,
+  language={},
+  showstringspaces=false,
+  basicstyle=\ttfamily,
+  keywordstyle=\color{black},
+  commentstyle=\color{black},
+  identifierstyle=\color{black},
+  stringstyle=\color{black},
+  backgroundcolor = \color{codegray},
+}
+
+\lstdefinestyle{customjava}{
+  language=Java,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\ttfamily,
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%},
+  backgroundcolor = \color{codegray},
+  belowcaptionskip=4pt,
+  captionpos=b,
+  tabsize=4
+}
+
+\hypersetup{%
+  pdftitle={Binary encoding using Dichotomies},
+  pdfauthor={Tim Burkert and Laurenz Kamp},
+  pdfsubject={Binary encoding using Dichotomies},
+  pdfview=FitH,
+  pdfstartview=FitV
+}
+
+\titlespacing{\section}{0pt}{10pt}{-5pt}
+\titlespacing{\subsection}{0pt}{10pt}{-5pt}
+\titlespacing{\subsubsection}{0pt}{10pt}{-8pt}
+
+
+%%% Zum Tester der Marginalien %%%
+  \newif\ifTUDmargin\TUDmarginfalse
+  %%% Wird der Folgende Zeile einkommentiert,
+  %%% werden Marginalien gesetzt.
+  % \TUDmargintrue
+  \ifTUDmargin\makeatletter
+    \TUD@setmarginpar{2}
+  \makeatother\fi
+%%% ENDE: Zum Tester der Marginalien %%%
+
+\newlength{\longtablewidth}
+\setlength{\longtablewidth}{0.7\linewidth}
+\addtolength{\longtablewidth}{-\marginparsep}
+\addtolength{\longtablewidth}{-\marginparwidth}
+
+% \settitlepicture{tudreport-pic}
+% \printpicturesize
+
+\title{Binary encoding using Dichotomies}
+\subtitle{Tim Burkert and Laurenz Kamp}
+\setinstitutionlogo{graphics/logo.pdf}
+\institution{Rechnersysteme}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Binary encoding using Dichotomies}
+
+\chapter{Implementation}
+
+\chapter{Evaluation}
+
+
+\end{document}
