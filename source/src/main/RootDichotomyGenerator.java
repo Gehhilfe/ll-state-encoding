@@ -26,17 +26,12 @@ public class RootDichotomyGenerator {
 		long lMask = constrain&mask;
 		long rMask = invConstrain&mask;
 		
-		System.out.println("Generating root dichotomies for constrain");
-		System.out.println("L: "+Long.toBinaryString(lMask)+" R: "+Long.toBinaryString(rMask));
-		System.out.println("Resulting root dichotomies");
-		
 		int rBits = Main.countBitsToPos(rMask, numStates);
 		
 		LongBitPermutationGenerator gen = new LongBitPermutationGenerator(rMask);
 		List<Long> permutations = gen.generate();
 		for(Long e:permutations) {
 			dichotomies.add(new Dichotomy(lMask, e));
-			System.out.println("L: "+Long.toBinaryString(lMask)+" R: "+Long.toBinaryString(e));
 		}
 		
 		return dichotomies;
