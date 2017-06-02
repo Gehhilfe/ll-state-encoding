@@ -1,5 +1,7 @@
 package lowlevel;
 
+import java.nio.file.Path;
+
 /**
  * Represents a parsed Fsm. This class could be seen as some kind of an intermediate representation
  * of an FSM.
@@ -14,6 +16,7 @@ public class ParsedFile {
 	private State[] states;
 	private int state_counter=0;
 	private State initial_state=null;
+	private String filename;
 			
 	public int getNumInputs() {
 		return num_inputs;
@@ -73,6 +76,12 @@ public class ParsedFile {
 			s += st.getName()+" "+Helper.longToOutputString(st.getCode())+"\n";
 		}
 		return s;
+	}
+	public void setFileName(String fileName2) {
+		this.filename = fileName2;
+	}
+	public String getFileName() {
+		return filename;
 	}
 }
 

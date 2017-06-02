@@ -25,6 +25,46 @@ public class CompNoRepGenerator implements Supplier<int[]>{
 		}
 	}
 	
+	public synchronized boolean generate(int[] output) {
+		if(first) {
+			first = false;
+			for(int m = 0; m < k; m++)
+				output[m] = vector[m];
+			return true;
+		}
+		
+		int j;
+		
+		//easy case, increase rightmost element
+		if(vector[k-1] < n -1) {
+			vector[k - 1]++;
+			for(int m = 0; m < k; m++)
+				output[m] = vector[m];
+			return true;
+		}
+		
+		for(j = k - 2; j >= 0; j--)
+			 if(vector[j] < n - k + j)
+			  break;
+		
+		//terminate if vector[0] == n - k
+		if(j < 0)
+			return false;
+		
+		//increase
+		vector[j]++;
+		
+		//set right-hand elements
+		while(j < k - 1) {
+			vector[j + 1] = vector[j] + 1;
+			j++;
+		}
+		
+		for(int m = 0; m < k; m++)
+			output[m] = vector[m];
+		return true;
+	}
+	
 	public synchronized int[] generate() {
 		if(first) {
 			first = false;

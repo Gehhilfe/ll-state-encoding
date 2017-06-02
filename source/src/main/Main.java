@@ -3,8 +3,10 @@ package main;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,9 +31,44 @@ public class Main {
 		}
 		return count;
 	};
+	
+	public static long unsetBitNum(long value, int pos) {
+		int count = 0;
+		int bitPos = 0;
+		long retValue = value;
+		while (value != 0) {
+			if(pos == 0) {
+				retValue = retValue& ~(1<<bitPos);
+			}
+			if ((value & 0x1) != 0)
+				pos--;
+			value >>= 1;
+			bitPos++;
+		}
+		return retValue;
+	};
+	
+	public static int getLastBitPos(long value) {
+		int pos = 0;
+		int res = 0;
+		while (value != 0) {
+			if ((value & 0x1) != 0)
+				res = pos;
+			value >>=1;
+			pos++;
+		}
+		return res;
+	}
 
 	private static BigInteger ONE = BigInteger.valueOf(1);
 
+	private static void printLong(long value, int bits) {
+		int pos = getLastBitPos(value);
+		for(int i=pos;i<bits-1;i++)
+			System.out.print('0');
+		System.out.print(Long.toBinaryString(value));
+	}
+	
 	public static int binKoeff(int im, int ik) {
 		BigInteger res = ONE;
 		BigInteger m = BigInteger.valueOf(im);
@@ -44,7 +81,6 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-				
 		
 		if(args.length>0){
 			System.out.println(" Current working directory : " + System.getProperty("user.dir"));
@@ -60,7 +96,7 @@ public class Main {
 			List<long[]> minCover = finder.compute();
 			
 			// Find constrain matrix
-			List<Long> constrains = minCover.stream().map(e -> e[2]).distinct().filter((e) -> {
+			List<Long> constrains = minCover.parallelStream().map(e -> e[2]).distinct().filter((e) -> {
 				int val = countBitsToPos(e, fsm.getNum_states());
 				return val > 1 && val != fsm.getNum_states();
 			}).collect(Collectors.toList());
@@ -89,18 +125,59 @@ public class Main {
 				}
 				table.add(res);
 			}
-		
+			
+			/*for(Dichotomy root : rootDichotomies) {
+				RootToPrimeDichotomyGenerator gen = new RootToPrimeDichotomyGenerator(root, fsm.getNum_states());
+				List<Dichotomy> subPrimes = gen.generate();
+				for(Dichotomy d:subPrimes) {
+					long res = 0;
+					if(primes.contains(d.lMask))
+						continue;
+					for(Dichotomy r: rootDichotomies) {
+						res <<= 1;
+						if(d.covers(r)) {
+							res |= 1; 
+						}
+					}
+					table.add(res);
+					primes.add(d.lMask);
+				}
+			}*/
+			
 			int range = 1;
 			boolean found = false;
 			int[] resultVec = null;
 			long searchMask = (1<<rootDichotomies.size())-1;
 			do {
+				resultVec = new int[range];
 				CompNoRepGenerator gen = new CompNoRepGenerator(range, table.size());
 				int limit = binKoeff(table.size(), range);
 				System.out.println(table.size());
 				System.out.println(range);
 				System.out.println(limit);
-				Optional<int[]> result = Stream.generate(gen).parallel().limit(binKoeff(table.size(), range)).filter((vec) -> {
+				while(gen.generate(resultVec)) {
+					long res = 0;
+					for (int i = 0; i < resultVec.length; i++) {
+						res |= table.get(resultVec[i]);
+					}
+					if(res == searchMask) {
+						found = true;
+						break;
+					}
+				}
+				/*
+				for (int[] vec = gen.generate(); vec != null; vec = gen.generate()) {
+					long res = 0;
+					for (int i = 0; i < vec.length; i++) {
+						res |= table.get(vec[i]);
+					}
+					if(res == searchMask) {
+						found = true;
+						resultVec = vec.clone();
+					}
+				}*/
+				/*
+				Optional<int[]> result = Stream.generate(gen).limit(binKoeff(table.size(), range)).filter((vec) -> {
 					long res = 0;
 					for (int i = 0; i < vec.length; i++) {
 						res |= table.get(vec[i]);
@@ -111,25 +188,65 @@ public class Main {
 					return false;
 				}).findAny();
 				
-				/*
-				for(int[] vec=gen.generate();vec!=null;vec=gen.generate()) {
-					long res = 0;
-					for (int i = 0; i < vec.length; i++) {
-						res |= table.get(vec[i]);
-					}
-					if(res == searchMask) {
-						resultVec = vec;
-						found = true;
-						break;
-					}
-				}*/
 				
 				if(result.isPresent()){
 					found = true;
 					resultVec = result.get().clone();
-				}
+				}*/
 				range++;
 			} while(!found);
+			
+			
+			System.out.println("Found minimal prime dichtomies:");
+			List<Long> resultingPrimes = new ArrayList<Long>();
+			for (int i = 0; i < resultVec.length; i++) {
+				long prime = primes.get(resultVec[i]);
+				resultingPrimes.add(prime);
+			}
+			
+			//Transpose
+			List<Long> resultingPrimesTranspose = new ArrayList();
+			Set<Long> lookupSet = new HashSet<Long>();
+			int maxM = 0;
+			for(int i = 0; i<fsm.getNum_states();i++) {
+				long val = 0;
+				int j = 0;
+				for(Long prime:resultingPrimes) {
+					val |= (((prime>>>i)&0x1)<<j);
+					j++;
+				}
+				
+				int m = 0;
+				long oldVal = val;
+				while(lookupSet.contains(val)) {
+					System.out.println("Collision");
+					m++;
+					val = oldVal | (m<<resultingPrimes.size());
+				}
+				
+				if(m>maxM)
+					maxM=m;
+				
+				resultingPrimesTranspose.add(val);
+				lookupSet.add(val);
+			}
+			
+			System.out.println(resultingPrimes.size());
+			System.out.println(getLastBitPos(maxM)+1);
+			
+			for(Long e:resultingPrimesTranspose) {
+				printLong(e, resultingPrimes.size()+getLastBitPos(maxM)+1);
+				System.out.print("\n");
+			}
+			
+			resultingPrimesTranspose.set(0, (long) 0x0);
+			resultingPrimesTranspose.set(1, (long) 0x2);
+			resultingPrimesTranspose.set(2, (long) 0x1);
+			resultingPrimesTranspose.set(3, (long) 0x3);
+			
+			
+			BLIFExporter exporter = new BLIFExporter(fsm, resultingPrimesTranspose, resultingPrimes.size()+getLastBitPos(maxM));
+			exporter.writeToFile(fsm.getFileName()+".blif");
 			System.out.println("Ende");
 		}
 		else{
