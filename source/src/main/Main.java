@@ -222,5 +222,7 @@ public class Main {
 		else{
 			System.out.println("No input argument given");
 		}
+
+		System.exit(0);
 	}
 }
