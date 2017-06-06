@@ -16,7 +16,7 @@ import lowlevel.State;
 
 /**
  * Main class
- * 
+ *
  * @author Wolf & Gottschling
  *
  */
@@ -31,7 +31,7 @@ public class Main {
 		}
 		return count;
 	};
-	
+
 	public static long unsetBitNum(long value, int pos) {
 		int count = 0;
 		int bitPos = 0;
@@ -47,7 +47,7 @@ public class Main {
 		}
 		return retValue;
 	};
-	
+
 	public static int getLastBitPos(long value) {
 		int pos = 0;
 		int res = 0;
@@ -68,7 +68,7 @@ public class Main {
 			System.out.print('0');
 		System.out.print(Long.toBinaryString(value));
 	}
-	
+
 	public static int binKoeff(int im, int ik) {
 		BigInteger res = ONE;
 		BigInteger m = BigInteger.valueOf(im);
@@ -81,36 +81,36 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		
+
 		if(args.length>0){
 			System.out.println(" Current working directory : " + System.getProperty("user.dir"));
-			
+
 			String input_file_name = args[0];
-			
+
 			Parser p = new Parser();
 			p.parseFile(input_file_name);
-			
+
 			// Representation of the FSM
 			ParsedFile fsm = p.getParsedFile();
 			MinimalCoverFinder finder = new MinimalCoverFinder(fsm);
 			List<long[]> minCover = finder.compute();
-			
+
 			// Find constrain matrix
 			List<Long> constrains = minCover.parallelStream().map(e -> e[2]).distinct().filter((e) -> {
 				int val = countBitsToPos(e, fsm.getNum_states());
 				return val > 1 && val != fsm.getNum_states();
 			}).collect(Collectors.toList());
-			
+
 			//
 			List<Dichotomy> rootDichotomies = new ArrayList<Dichotomy>();
 			for(long constrain: constrains) {
 				RootDichotomyGenerator generator = new RootDichotomyGenerator(constrain, fsm.getNum_states());
 				rootDichotomies.addAll(generator.generate());
 			}
-			
+
 			System.out.print("\n");
 			System.out.print("\n");
-			
+
 			List<Long> table = new ArrayList<>();
 			List<Long> primes = new ArrayList<>();
 			DichotomyGenerator dg = new DichotomyGenerator(fsm.getNum_states());
@@ -120,12 +120,12 @@ public class Main {
 				for(Dichotomy root: rootDichotomies) {
 					res <<= 1;
 					if(d.covers(root)) {
-						res |= 1; 
+						res |= 1;
 					}
 				}
 				table.add(res);
 			}
-			
+
 			/*for(Dichotomy root : rootDichotomies) {
 				RootToPrimeDichotomyGenerator gen = new RootToPrimeDichotomyGenerator(root, fsm.getNum_states());
 				List<Dichotomy> subPrimes = gen.generate();
@@ -136,17 +136,18 @@ public class Main {
 					for(Dichotomy r: rootDichotomies) {
 						res <<= 1;
 						if(d.covers(r)) {
-							res |= 1; 
+							res |= 1;
 						}
 					}
 					table.add(res);
 					primes.add(d.lMask);
 				}
 			}*/
-			
+
 			int range = 1;
 			boolean found = false;
 			int[] resultVec = null;
+			/*
 			long searchMask = (1<<rootDichotomies.size())-1;
 			do {
 				resultVec = new int[range];
@@ -165,45 +166,20 @@ public class Main {
 						break;
 					}
 				}
-				/*
-				for (int[] vec = gen.generate(); vec != null; vec = gen.generate()) {
-					long res = 0;
-					for (int i = 0; i < vec.length; i++) {
-						res |= table.get(vec[i]);
-					}
-					if(res == searchMask) {
-						found = true;
-						resultVec = vec.clone();
-					}
-				}*/
-				/*
-				Optional<int[]> result = Stream.generate(gen).limit(binKoeff(table.size(), range)).filter((vec) -> {
-					long res = 0;
-					for (int i = 0; i < vec.length; i++) {
-						res |= table.get(vec[i]);
-					}
-					if(res == searchMask) {
-						return true;
-					}
-					return false;
-				}).findAny();
-				
-				
-				if(result.isPresent()){
-					found = true;
-					resultVec = result.get().clone();
-				}*/
 				range++;
 			} while(!found);
-			
-			
+			*/
+
+			ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 4, rootDichotomies.size());
+			resultVec = coverFinder.run();
+
 			System.out.println("Found minimal prime dichtomies:");
 			List<Long> resultingPrimes = new ArrayList<Long>();
 			for (int i = 0; i < resultVec.length; i++) {
 				long prime = primes.get(resultVec[i]);
 				resultingPrimes.add(prime);
 			}
-			
+
 			//Transpose
 			List<Long> resultingPrimesTranspose = new ArrayList();
 			Set<Long> lookupSet = new HashSet<Long>();
@@ -215,7 +191,7 @@ public class Main {
 					val |= (((prime>>>i)&0x1)<<j);
 					j++;
 				}
-				
+
 				int m = 0;
 				long oldVal = val;
 				while(lookupSet.contains(val)) {
@@ -223,28 +199,22 @@ public class Main {
 					m++;
 					val = oldVal | (m<<resultingPrimes.size());
 				}
-				
+
 				if(m>maxM)
 					maxM=m;
-				
+
 				resultingPrimesTranspose.add(val);
 				lookupSet.add(val);
 			}
-			
+
 			System.out.println(resultingPrimes.size());
 			System.out.println(getLastBitPos(maxM)+1);
-			
+
 			for(Long e:resultingPrimesTranspose) {
 				printLong(e, resultingPrimes.size()+getLastBitPos(maxM)+1);
 				System.out.print("\n");
 			}
-			
-			resultingPrimesTranspose.set(0, (long) 0x0);
-			resultingPrimesTranspose.set(1, (long) 0x2);
-			resultingPrimesTranspose.set(2, (long) 0x1);
-			resultingPrimesTranspose.set(3, (long) 0x3);
-			
-			
+
 			BLIFExporter exporter = new BLIFExporter(fsm, resultingPrimesTranspose, resultingPrimes.size()+getLastBitPos(maxM));
 			exporter.writeToFile(fsm.getFileName()+".blif");
 			System.out.println("Ende");
