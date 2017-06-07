@@ -183,6 +183,8 @@ public class ParallelCoverFinder {
 			int step = tableSize / threadCount;
 			int id = 0;
 
+			System.out.println("Search size: " + size);
+
 			for(int i = 0; i < threadCount; i++) {
 				int min = i * step;
 				int max = (i + 1) * step;
