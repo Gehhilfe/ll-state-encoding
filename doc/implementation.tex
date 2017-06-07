@@ -12,10 +12,10 @@ For implementation we implemented an iterative approach. The algorithm terminate
 
 From the set of resulting super cubes for the states constrain matrix $A$ can be constructed. Only the entries that actual constrain the problem are for interested, therefor entries including all symbols as symbolic implicant or entries that include only one symbolic literal as implicant can be removed. Only entries that portion the symbolic state into a relation of one symbol can be combined with others not include other symbol, like the given example, are for interested. 
 
-\section{Generating of Root Dichotomies}
+\section{Generation of Root Dichotomies}
 The generation of all root dichotomies is straight forward implementation of a sequential generator. This generator uses all rows of the constrain matrix and computes all resulting root dichotomies for each row. The number of root dichotomies are equal to the number of symbols assigned a zero in the constrain row.
 
-\section{Generating of Prime Dichotomies Candidates}
+\section{Generation of Prime Dichotomies Candidates}
 As stated before to find a exact solution all candidates prime dichotomies must be checked. A candidate is a dichotomy where a symbols are portioned in both sets. We used a long vector with positional symbol notation where each bit is assigned to a symbol. Just by iterating all possible values all prime dichotomies candidates are reached. The inverse property of dichotomies regarding encoding is used to reduce set of candidates to the half. Because all values in the lower half have a value inverse equal in the upper half. For example a positional symbol notation vector for 5 five symbols of $2'b00110$ is equal to $2'b11001$.
 
 \section{Prime Dichotomies Coverage Table}
