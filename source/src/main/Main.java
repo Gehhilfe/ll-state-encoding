@@ -217,14 +217,19 @@ public class Main {
 			});
 
 			System.out.println("Coverage table computed, starting so search...");
-			ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 32, rootDichotomies.size());
-			resultVec = coverFinder.run();
+			if(table.size() > 0) {
+				ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 1, rootDichotomies.size());
+				resultVec = coverFinder.run();
+			}
 
 			System.out.println("Found minimal prime dichtomies:");
 			List<Long> resultingPrimes = new ArrayList<Long>();
-			for (int i = 0; i < resultVec.length; i++) {
-				long prime = primes.get(resultVec[i]);
-				resultingPrimes.add(prime);
+			
+			if(resultVec != null) {
+				for (int i = 0; i < resultVec.length; i++) {
+					long prime = primes.get(resultVec[i]);
+					resultingPrimes.add(prime);
+				}
 			}
 
 			//Transpose
