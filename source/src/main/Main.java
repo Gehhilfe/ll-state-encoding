@@ -22,23 +22,45 @@ import lowlevel.State;
  *
  */
 public class Main {
-	
+
+	public static boolean verifyTable(List<long[]> table, int width) {
+
+		for(int i = 0; i < width; i++) {
+			boolean bitSet = false;
+
+			int idx = i / 64;
+			int shift = i % 64;
+
+			for(long[] l : table) {
+				if((l[idx] & (1L << shift)) != 0) {
+					bitSet = true;
+				}
+			}
+
+			if(bitSet == false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public static boolean arrayZero(long[] arr) {
 		boolean zero = true;
-		
+
 		for(int i = 0; i < arr.length; i++) {
 			if(arr[i] != 0) {
 				zero = false;
 				break;
 			}
 		}
-		
+
 		return zero;
 	}
-	
+
 	public static int countBitsInArray(long[] arr) {
 		int count = 0;
-		
+
 		for(int i = 0; i < arr.length; i++) {
 			for(int ii = 0; ii < 64; ii++) {
 				if(((arr[i] >> ii) & 1) == 1) {
@@ -46,7 +68,7 @@ public class Main {
 				}
 			}
 		}
-		
+
 		return count;
 	}
 
@@ -104,7 +126,7 @@ public class Main {
 		}
 		return res.intValue();
 	}
-	
+
 	private static void longArrayShift(long[] arr, int val) {
 		for(int i = arr.length - 1; i > 0; i--) {
 			arr[i] <<= 1;
@@ -143,7 +165,7 @@ public class Main {
 
 			System.out.print("\n");
 			System.out.print("\n");
-			
+
 			List<long[]> table = new ArrayList<>();
 			List<Long> primes = new ArrayList<>();
 			DichotomyGenerator dg = new DichotomyGenerator(fsm.getNum_states());
@@ -163,50 +185,11 @@ public class Main {
 				}
 			}
 
-			/*for(Dichotomy root : rootDichotomies) {
-				RootToPrimeDichotomyGenerator gen = new RootToPrimeDichotomyGenerator(root, fsm.getNum_states());
-				List<Dichotomy> subPrimes = gen.generate();
-				for(Dichotomy d:subPrimes) {
-					long res = 0;
-					if(primes.contains(d.lMask))
-						continue;
-					for(Dichotomy r: rootDichotomies) {
-						res <<= 1;
-						if(d.covers(r)) {
-							res |= 1;
-						}
-					}
-					table.add(res);
-					primes.add(d.lMask);
-				}
-			}*/
-
 			int range = 1;
 			boolean found = false;
 			int[] resultVec = null;
-			/*
-			long searchMask = (1L<<rootDichotomies.size())-1;
-			do {
-				resultVec = new int[range];
-				CompNoRepGenerator gen = new CompNoRepGenerator(range, table.size());
-				int limit = binKoeff(table.size(), range);
-				System.out.println(table.size());
-				System.out.println(range);
-				System.out.println(limit);
-				while(gen.generate(resultVec)) {
-					long res = 0;
-					for (int i = 0; i < resultVec.length; i++) {
-						res |= table.get(resultVec[i]);
-					}
-					if(res == searchMask) {
-						found = true;
-						break;
-					}
-				}
-				range++;
-			} while(!found);
-			*/
-			
+
+
 			System.out.println("Sorting list with " + table.size() + " entries...");
 			table.sort(new Comparator<long[]>() {
 				@Override
@@ -216,6 +199,13 @@ public class Main {
 				}
 			});
 
+			System.out.print("Verifying table... ");
+			if(verifyTable(table, rootDichotomies.size())) {
+				System.out.println("Success!");
+			} else {
+				System.out.println("Failed!");
+			}
+
 			System.out.println("Coverage table computed, starting so search...");
 			if(table.size() > 0) {
 				ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 1, rootDichotomies.size());
@@ -224,7 +214,7 @@ public class Main {
 
 			System.out.println("Found minimal prime dichtomies:");
 			List<Long> resultingPrimes = new ArrayList<Long>();
-			
+
 			if(resultVec != null) {
 				for (int i = 0; i < resultVec.length; i++) {
 					long prime = primes.get(resultVec[i]);
