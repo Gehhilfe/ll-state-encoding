@@ -2,6 +2,7 @@ package main;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,33 @@ import lowlevel.State;
  *
  */
 public class Main {
+	
+	public static boolean arrayZero(long[] arr) {
+		boolean zero = true;
+		
+		for(int i = 0; i < arr.length; i++) {
+			if(arr[i] != 0) {
+				zero = false;
+				break;
+			}
+		}
+		
+		return zero;
+	}
+	
+	public static int countBitsInArray(long[] arr) {
+		int count = 0;
+		
+		for(int i = 0; i < arr.length; i++) {
+			for(int ii = 0; ii < 64; ii++) {
+				if(((arr[i] >> ii) & 1) == 1) {
+					count++;
+				}
+			}
+		}
+		
+		return count;
+	}
 
 	public static int countBitsToPos(long value, int pos) {
 		int count = 0;
@@ -87,7 +115,6 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-
 		if(args.length>0){
 			System.out.println(" Current working directory : " + System.getProperty("user.dir"));
 
@@ -116,13 +143,12 @@ public class Main {
 
 			System.out.print("\n");
 			System.out.print("\n");
-
+			
 			List<long[]> table = new ArrayList<>();
 			List<Long> primes = new ArrayList<>();
 			DichotomyGenerator dg = new DichotomyGenerator(fsm.getNum_states());
 			int arraySize = (rootDichotomies.size() / 64) + 1;
 			for(Dichotomy d = dg.generate();d!=null;d = dg.generate()) {
-				primes.add(d.lMask);
 				long[] res = new long[arraySize];
 				for(Dichotomy root: rootDichotomies) {
 					if(d.covers(root)) {
@@ -131,7 +157,10 @@ public class Main {
 						longArrayShift(res, 0);
 					}
 				}
-				table.add(res);
+				if(!arrayZero(res)) {
+					primes.add(d.lMask);
+					table.add(res);
+				}
 			}
 
 			/*for(Dichotomy root : rootDichotomies) {
@@ -177,7 +206,17 @@ public class Main {
 				range++;
 			} while(!found);
 			*/
+			
+			System.out.println("Sorting list with " + table.size() + " entries...");
+			table.sort(new Comparator<long[]>() {
+				@Override
+				public int compare(long[] o1, long[] o2) {
+					// TODO Auto-generated method stub
+					return countBitsInArray(o2) - countBitsInArray(o1);
+				}
+			});
 
+			System.out.println("Coverage table computed, starting so search...");
 			ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 32, rootDichotomies.size());
 			resultVec = coverFinder.run();
 
