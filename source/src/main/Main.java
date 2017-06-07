@@ -2,6 +2,7 @@ package main;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,25 +25,28 @@ import lowlevel.State;
 public class Main {
 
 	public static boolean verifyTable(List<long[]> table, int width) {
+		int[] counter = new int[width];
+		boolean bitSet = false;
 
 		for(int i = 0; i < width; i++) {
-			boolean bitSet = false;
+			bitSet = false;
 
 			int idx = i / 64;
 			int shift = i % 64;
 
 			for(long[] l : table) {
 				if((l[idx] & (1L << shift)) != 0) {
+					counter[i]++;
 					bitSet = true;
 				}
 			}
 
 			if(bitSet == false) {
-				return false;
+				break;
 			}
 		}
 
-		return true;
+		return bitSet;
 	}
 
 	public static boolean arrayZero(long[] arr) {
@@ -170,6 +174,7 @@ public class Main {
 			List<Long> primes = new ArrayList<>();
 			DichotomyGenerator dg = new DichotomyGenerator(fsm.getNum_states());
 			int arraySize = (rootDichotomies.size() / 64) + 1;
+			int counter = 0;
 			for(Dichotomy d = dg.generate();d!=null;d = dg.generate()) {
 				long[] res = new long[arraySize];
 				for(Dichotomy root: rootDichotomies) {
@@ -189,7 +194,7 @@ public class Main {
 			boolean found = false;
 			int[] resultVec = null;
 
-
+			/*
 			System.out.println("Sorting list with " + table.size() + " entries...");
 			table.sort(new Comparator<long[]>() {
 				@Override
@@ -198,6 +203,7 @@ public class Main {
 					return countBitsInArray(o2) - countBitsInArray(o1);
 				}
 			});
+			*/
 
 			System.out.print("Verifying table... ");
 			if(verifyTable(table, rootDichotomies.size())) {
@@ -206,9 +212,10 @@ public class Main {
 				System.out.println("Failed!");
 			}
 
+
 			System.out.println("Coverage table computed, starting so search...");
 			if(table.size() > 0) {
-				ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 1, rootDichotomies.size());
+				ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 8, rootDichotomies.size());
 				resultVec = coverFinder.run();
 			}
 
