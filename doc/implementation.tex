@@ -1,0 +1,14 @@
+\chapter{Implementation}
+
+\section{Construction of Constrain Matrix}
+Before solving the input encoding problem the given problem specification must be transformed into a constrain matrix. This constrain matrix is further called $A$. Each row $i$ of $A_{i,j}$ describes a constrain on the resulting encoding. Furthermore, each column $j$ of $A_{i,j}$ assigned to a encoded symbol. For example the row $(1,1,0,0)$ means that symbols $3, 4$ can be encode together so that the resulting super cube does not include symbols $1, 2$. This constrain would be equal to the row $(0,0,1,1)$. The reason for this that a dichotomy describes a bipartition of a set, but for encoding problems only the relation between the elements in both sets are important. Therefore, the partition $A_0:{1,2} A_1:{3,4}$ and the partition $B_0:{3,4} B_1:{1,2}$ are inverse partitions but the relations are all equal. In $A$ and $B$ the elements $1, 2$ are combined in a set and are not combined with $3, 4$. A row describes also a bipartition of all symbols.
+
+The given problem specification used symbolic names for state and binary notation including don't cares for input and output vectors. The constrain matrix $A$ is a result of the minimal symbolic cover. Because of the binary notation of the input and output vectors we transformed the symbolic problem into a binary coded cover problem. We used the positional cube notation to deal with input and output binary notation including don't cares. For the symbolic state names we used a one hot positional encoding. 
+
+A covering super cube can for a set of positional cube notation vectors is computed by AND-conjunction all vectors. The resulting cube must be tested for validity. This is given when all cubes are valid (not equals $2'b00$).
+
+\subsection{Minimal Cover Algorithm}
+For implementation we implemented an iterative approach. The algorithm terminates when no further improvements are possible. This is when all combination of entries are tested. When a optimization is possible the two vectors that are combined are removed and a new vector covering both is included. When this happens all combinations of entries are tried again until termination.
+
+From the set of resulting super cubes for the states constrain matrix $A$ can be constructed. Only the entries that actual constrain the problem are for interested, therefor entries including all symbols as symbolic implicant or entries that include only one symbolic literal as implicant can be removed. Only entries that portion the symbolic state into a relation of one symbol can be combined with others not include other symbol, like the given example, are for interested. 
+
