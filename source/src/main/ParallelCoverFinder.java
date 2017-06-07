@@ -49,11 +49,11 @@ public class ParallelCoverFinder {
 
 	class Worker extends Thread {
 		int width;
-		List<Long> table;
+		List<long[]> table;
 		LimitedCombinationGenerator combGen;
 		WorkerStatus status;
 
-		public Worker(List<Long> table, LimitedCombinationGenerator combGen, WorkerStatus status, int width) {
+		public Worker(List<long[]> table, LimitedCombinationGenerator combGen, WorkerStatus status, int width) {
 			this.table = table;
 			this.combGen = combGen;
 			this.status = status;
@@ -63,15 +63,30 @@ public class ParallelCoverFinder {
 		@Override
 		public void run() {
 			int[] resultVec;
-			long searchMask = (1<<width)-1;
+			long[] searchMask = new long[width/64 + 1];
 			boolean found = false;
+			
+			for(int i = 0; i < width; i += 64) {
+				searchMask[i/64] = -1L;
+			}
+			searchMask[searchMask.length-1] = (1L << (width % 64)) - 1;
 
 			while((resultVec = combGen.generate()) != null) {
-				long res = 0;
+				long[] res = new long[searchMask.length];
 				for (int i = 0; i < resultVec.length; i++) {
-					res |= table.get(resultVec[i]);
+					long[] entry = table.get(resultVec[i]);
+					for(int ii = 0; ii < searchMask.length; ii++) {
+						res[ii] |= entry[ii];
+					}
 				}
-				if(res == searchMask) {
+				boolean equal = true;
+				for(int i = 0; i < searchMask.length; i++) {
+					if(res[i] != searchMask[i]) {
+						equal = false;
+						break;
+					}
+				}
+				if(equal) {
 					found = true;
 					break;
 				}
@@ -144,11 +159,11 @@ public class ParallelCoverFinder {
 		}
 	}
 
-	List<Long> table;
+	List<long[]> table;
 	int threadCount;
 	int width;
 
-	public ParallelCoverFinder(List<Long> table, int threadCount, int width) {
+	public ParallelCoverFinder(List<long[]> table, int threadCount, int width) {
 		this.table = table;
 		this.threadCount = threadCount;
 		this.width = width;

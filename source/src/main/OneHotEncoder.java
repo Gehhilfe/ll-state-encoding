@@ -18,7 +18,7 @@ public class OneHotEncoder {
 	public long encode(State s) {
 		if(encodings.containsKey(s))
 			return encodings.get(s);
-		long encoding = (1<<index);
+		long encoding = (1L<<index);
 		index += 1;
 		if(index >= 63) {
 			throw new UnsupportedOperationException();

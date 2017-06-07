@@ -38,7 +38,7 @@ public class Main {
 		long retValue = value;
 		while (value != 0) {
 			if(pos == 0) {
-				retValue = retValue& ~(1<<bitPos);
+				retValue = retValue& ~(1L<<bitPos);
 			}
 			if ((value & 0x1) != 0)
 				pos--;
@@ -49,13 +49,10 @@ public class Main {
 	};
 
 	public static int getLastBitPos(long value) {
-		int pos = 0;
 		int res = 0;
 		while (value != 0) {
-			if ((value & 0x1) != 0)
-				res = pos;
 			value >>=1;
-			pos++;
+			res++;
 		}
 		return res;
 	}
@@ -78,6 +75,15 @@ public class Main {
 			m = m.subtract(ONE);
 		}
 		return res.intValue();
+	}
+	
+	private static void longArrayShift(long[] arr, int val) {
+		for(int i = arr.length - 1; i > 0; i--) {
+			arr[i] <<= 1;
+			arr[i] |= arr[i-1] >>> 64;
+		}
+		arr[0] <<= 1;
+		arr[0] |= val;
 	}
 
 	public static void main(String[] args) {
@@ -111,16 +117,18 @@ public class Main {
 			System.out.print("\n");
 			System.out.print("\n");
 
-			List<Long> table = new ArrayList<>();
+			List<long[]> table = new ArrayList<>();
 			List<Long> primes = new ArrayList<>();
 			DichotomyGenerator dg = new DichotomyGenerator(fsm.getNum_states());
+			int arraySize = (rootDichotomies.size() / 64) + 1;
 			for(Dichotomy d = dg.generate();d!=null;d = dg.generate()) {
 				primes.add(d.lMask);
-				long res = 0;
+				long[] res = new long[arraySize];
 				for(Dichotomy root: rootDichotomies) {
-					res <<= 1;
 					if(d.covers(root)) {
-						res |= 1;
+						longArrayShift(res, 1);
+					} else {
+						longArrayShift(res, 0);
 					}
 				}
 				table.add(res);
@@ -148,7 +156,7 @@ public class Main {
 			boolean found = false;
 			int[] resultVec = null;
 			/*
-			long searchMask = (1<<rootDichotomies.size())-1;
+			long searchMask = (1L<<rootDichotomies.size())-1;
 			do {
 				resultVec = new int[range];
 				CompNoRepGenerator gen = new CompNoRepGenerator(range, table.size());
@@ -170,7 +178,7 @@ public class Main {
 			} while(!found);
 			*/
 
-			ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 4, rootDichotomies.size());
+			ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 32, rootDichotomies.size());
 			resultVec = coverFinder.run();
 
 			System.out.println("Found minimal prime dichtomies:");

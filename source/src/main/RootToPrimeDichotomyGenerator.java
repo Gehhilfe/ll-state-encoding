@@ -24,10 +24,10 @@ public class RootToPrimeDichotomyGenerator {
 		long notSetBits = (rootDichotomy.rMask ^ invMask)&mask& ~(rootDichotomy.lMask);
 		int bits = Main.countBitsToPos(notSetBits, numStates);
 		
-		for(long i=0;i<=(long)(1<<(bits-1));i++) {
+		for(long i=0;i<=(long)(1L<<(bits-1));i++) {
 			long rMask = notSetBits;
 			for(int j=0;j<bits;j++) {
-				if((i & (1<<j)) != 0) {
+				if((i & (1L<<j)) != 0) {
 					rMask = Main.unsetBitNum(rMask, j);
 				}
 			}

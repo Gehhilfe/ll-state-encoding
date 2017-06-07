@@ -19,6 +19,7 @@ public class BLIFExporter {
 		this.fsm = fsm;
 		this.encoding = encoding;
 		this.stateBits = stateBits;
+		System.out.println("stateBits: " + this.stateBits);
 	}
 	
 	private String getInputs() {
@@ -122,7 +123,7 @@ public class BLIFExporter {
 				long[][] transistions = s.getTransitions();
 				for(long[] entry:transistions) {
 					long targetEncoding = entry[2];
-					if((targetEncoding&(1<<x)) != 0) {
+					if((targetEncoding&(1L<<x)) != 0) {
 						sb.append("\n");
 						sb.append(getNumBits(l, stateBits));
 						sb.append(getBitsPosCube(entry[1], fsm.getNumInputs()));
@@ -151,10 +152,7 @@ public class BLIFExporter {
 				long[][] transistions = s.getOutputs();
 				for(long[] entry:transistions) {
 					long targetEncoding = entry[2];
-					for (int j = 0; j < entry.length; j++) {
-						
-					}
-					if((targetEncoding&(3<<2*x)) == 0x2) {
+					if((targetEncoding&(3L<<2*x)) == 0x2L<<2*x) {
 						sb.append("\n");
 						sb.append(getNumBits(l, stateBits));
 						sb.append(getBitsPosCube(entry[1], fsm.getNumInputs()));
