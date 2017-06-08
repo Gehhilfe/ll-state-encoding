@@ -14,12 +14,19 @@ public class ParallelCoverFinder {
 		boolean solutionFound;
 		int[] solution;
 		CountDownLatch exitSignal;
+		
+		Object rowMutex;
+		int row;
+		int maxRow;
 
-		public WorkerStatus(int workerCount) {
+		public WorkerStatus(int workerCount, int rows) {
 			this.workerCount = workerCount;
 			countMutex = new Object();
 			exitSignal = new CountDownLatch(1);
 			this.solution = null;
+			this.row = 0;
+			this.maxRow = rows;
+			this.rowMutex = new Object();
 		}
 
 		public void finished() {
@@ -30,6 +37,21 @@ public class ParallelCoverFinder {
 					exitSignal.countDown();
 				}
 			}
+		}
+		
+		public int getRow() {
+			int r;
+			
+			synchronized (rowMutex) {
+				if(row < maxRow) {
+					r = row;
+					row++;
+				} else {
+					r = -1;
+				}
+			}
+			
+			return r;
 		}
 
 		public void solutionFound(int[] solution) {
@@ -52,51 +74,56 @@ public class ParallelCoverFinder {
 	class Worker extends Thread {
 		int id;
 		int width;
+		int size;
 		List<long[]> table;
-		LimitedCombinationGenerator combGen;
 		WorkerStatus status;
 
-		public Worker(int id, List<long[]> table, LimitedCombinationGenerator combGen, WorkerStatus status, int width) {
+		public Worker(int id, List<long[]> table, WorkerStatus status, int width, int size) {
 			this.table = table;
-			this.combGen = combGen;
 			this.status = status;
 			this.width = width;
 			this.id = id;
+			this.size = size;
 		}
 
 		@Override
 		public void run() {
-			int[] resultVec;
+			int[] resultVec = null;
 			long[] searchMask = new long[width/64 + 1];
 			boolean found = false;
+			int row;
 
 			for(int i = 0; i < width; i += 64) {
 				searchMask[i/64] = -1L;
 			}
 			searchMask[searchMask.length-1] = (1L << (width % 64)) - 1;
 
-			while((resultVec = combGen.generate()) != null) {
-				long[] res = new long[searchMask.length];
-				for (int i = 0; i < resultVec.length; i++) {
-					long[] entry = table.get(resultVec[i]);
-					for(int ii = 0; ii < searchMask.length; ii++) {
-						res[ii] |= entry[ii];
+			while((row = status.getRow()) != -1) {
+				LimitedCombinationGenerator combGen = new LimitedCombinationGenerator(table.size(), size, row, row+1);
+				while((resultVec = combGen.generate()) != null) {
+					long[] res = new long[searchMask.length];
+					for (int i = 0; i < resultVec.length; i++) {
+						long[] entry = table.get(resultVec[i]);
+						for(int ii = 0; ii < searchMask.length; ii++) {
+							res[ii] |= entry[ii];
+						}
 					}
-				}
-				boolean equal = true;
-				for(int i = 0; i < searchMask.length; i++) {
-					if(res[i] != searchMask[i]) {
-						equal = false;
+					boolean equal = true;
+					for(int i = 0; i < searchMask.length; i++) {
+						if(res[i] != searchMask[i]) {
+							equal = false;
+							break;
+						}
+					}
+					if(equal) {
+						found = true;
 						break;
 					}
 				}
-				if(equal) {
-					found = true;
+				if(found) {
 					break;
 				}
 			}
-
-			System.out.println("Thread " + id + " finished");
 
 			if(found) {
 				status.solutionFound(resultVec);
@@ -122,6 +149,9 @@ public class ParallelCoverFinder {
 
 		public int[] generate() {
 			if(!initialized) {
+				if(min + k >= n) {
+					return null;
+				}
 				vector = new int[k];
 				for (int i = 0; i < k; i++) {
 					vector[i] = min + i;
@@ -174,49 +204,21 @@ public class ParallelCoverFinder {
 		this.threadCount = threadCount;
 		this.width = width;
 	}
-	
-	private static int boundary(double step, int tablesize)
-	{
-		BigDecimal result;
-		BigDecimal s = new BigDecimal(step);
-		
-		result = s.add(new BigDecimal(0.3d));
-		result = result.pow(4);
-		result = result.multiply(new BigDecimal(0.25d));
-		result = result.add(s.multiply(new BigDecimal(0.288d)));
-		result = result.subtract(new BigDecimal(0.002025d));
-		result = result.multiply(new BigDecimal(tablesize));
-		
-		return result.intValue();
-	}
 
 	public int[] run() {
 		int size = 1;
 
 		while(true) {
 			int tableSize = table.size();
-			WorkerStatus status = new WorkerStatus(threadCount);
+			WorkerStatus status = new WorkerStatus(threadCount, tableSize);
 
 			//int step = tableSize / threadCount;
 			int id = 0;
 			
-			double step = 1.0d/(double)threadCount;
-			int lastBound = 0;
-
 			System.out.println("Search size: " + size);
 
 			for(int i = 0; i < threadCount; i++) {
-				int min = lastBound;
-				int max = boundary(step * (double)(i+1), tableSize);
-				lastBound = max;
-				
-				if(i == (threadCount - 1)) {
-					max = tableSize;
-				}
-
-				LimitedCombinationGenerator combGen = new LimitedCombinationGenerator(tableSize, size, min, max);
-
-				new Worker(id++, table, combGen, status, width).start();
+				new Worker(id++, table, status, width, size).start();
 			}
 
 			int[] result = status.waitForThreads();

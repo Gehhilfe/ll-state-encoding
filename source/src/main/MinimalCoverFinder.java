@@ -79,15 +79,6 @@ public class MinimalCoverFinder {
 			newLines = min(oldLines);
 		} while(newLines.size() != oldLines.size());
 		
-		
-		for(long[] line: newLines) {
-			for(long l: line) { 
-				System.out.print(Long.toBinaryString(l));
-				System.out.print(' ');
-			}
-			System.out.print("\n");
-		}
-		
 		return newLines;
 	}
 	

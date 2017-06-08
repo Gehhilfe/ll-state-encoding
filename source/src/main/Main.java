@@ -194,6 +194,7 @@ public class Main {
 			System.out.print("\n");
 
 			int coveredcounter = 0;
+			int coveredcounter2 = 0;
 			List<long[]> table = new ArrayList<>();
 			List<Long> primes = new ArrayList<>();
 			DichotomyGenerator dg = new DichotomyGenerator(fsm.getNum_states());
@@ -221,12 +222,21 @@ public class Main {
 					if(!covered) {
 						primes.add(d.lMask);
 						table.add(res);
+						
+						for(int i = 0; i < table.size() - 1; i++) {
+							if(coversArray(res, table.get(i))) {
+								table.remove(i);
+								primes.remove(i);
+								coveredcounter2++;
+							}
+						}
 					}
 				}
 			}
 			
 			System.out.println("Table size: " + table.size());
 			System.out.println("Covered rows removed: " + coveredcounter);
+			System.out.println("Covered rows removed: " + coveredcounter2);
 
 			int range = 1;
 			boolean found = false;
@@ -253,7 +263,7 @@ public class Main {
 
 			System.out.println("Coverage table computed, starting so search...");
 			if(table.size() > 0) {
-				ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 10, rootDichotomies.size());
+				ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 32, rootDichotomies.size());
 				resultVec = coverFinder.run();
 			}
 
