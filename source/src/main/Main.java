@@ -23,6 +23,29 @@ import lowlevel.State;
  *
  */
 public class Main {
+	
+	public static void printArray(long[] a) {
+		for(int i = a.length - 1; i >= 0; i--) {
+			for(int ii = 0; ii < Long.numberOfLeadingZeros(a[i]); ii++) {
+				System.out.print("0");
+			}
+			System.out.print(Long.toBinaryString(a[i]));
+		}
+		System.out.println("");
+	}
+	
+	public static boolean coversArray(long[] a, long[] b) {
+		boolean covers = true;
+		
+		for(int i = 0; i < a.length; i++) {
+			if((a[i] & b[i]) != b[i]) {
+				covers = false;
+				break;
+			}
+		}
+		
+		return covers;
+	}
 
 	public static boolean verifyTable(List<long[]> table, int width) {
 		int[] counter = new int[width];
@@ -170,6 +193,7 @@ public class Main {
 			System.out.print("\n");
 			System.out.print("\n");
 
+			int coveredcounter = 0;
 			List<long[]> table = new ArrayList<>();
 			List<Long> primes = new ArrayList<>();
 			DichotomyGenerator dg = new DichotomyGenerator(fsm.getNum_states());
@@ -185,10 +209,24 @@ public class Main {
 					}
 				}
 				if(!arrayZero(res)) {
-					primes.add(d.lMask);
-					table.add(res);
+					boolean covered = false;
+					for(long[] l : table) {
+						if(coversArray(l, res)) {
+							covered = true;
+							coveredcounter++;
+							break;
+						}
+					}
+					
+					if(!covered) {
+						primes.add(d.lMask);
+						table.add(res);
+					}
 				}
 			}
+			
+			System.out.println("Table size: " + table.size());
+			System.out.println("Covered rows removed: " + coveredcounter);
 
 			int range = 1;
 			boolean found = false;
@@ -215,7 +253,7 @@ public class Main {
 
 			System.out.println("Coverage table computed, starting so search...");
 			if(table.size() > 0) {
-				ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 8, rootDichotomies.size());
+				ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 10, rootDichotomies.size());
 				resultVec = coverFinder.run();
 			}
 

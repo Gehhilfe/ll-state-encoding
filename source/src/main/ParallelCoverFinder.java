@@ -1,5 +1,7 @@
 package main;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -172,6 +174,21 @@ public class ParallelCoverFinder {
 		this.threadCount = threadCount;
 		this.width = width;
 	}
+	
+	private static int boundary(double step, int tablesize)
+	{
+		BigDecimal result;
+		BigDecimal s = new BigDecimal(step);
+		
+		result = s.add(new BigDecimal(0.3d));
+		result = result.pow(4);
+		result = result.multiply(new BigDecimal(0.25d));
+		result = result.add(s.multiply(new BigDecimal(0.288d)));
+		result = result.subtract(new BigDecimal(0.002025d));
+		result = result.multiply(new BigDecimal(tablesize));
+		
+		return result.intValue();
+	}
 
 	public int[] run() {
 		int size = 1;
@@ -180,14 +197,19 @@ public class ParallelCoverFinder {
 			int tableSize = table.size();
 			WorkerStatus status = new WorkerStatus(threadCount);
 
-			int step = tableSize / threadCount;
+			//int step = tableSize / threadCount;
 			int id = 0;
+			
+			double step = 1.0d/(double)threadCount;
+			int lastBound = 0;
 
 			System.out.println("Search size: " + size);
 
 			for(int i = 0; i < threadCount; i++) {
-				int min = i * step;
-				int max = (i + 1) * step;
+				int min = lastBound;
+				int max = boundary(step * (double)(i+1), tableSize);
+				lastBound = max;
+				
 				if(i == (threadCount - 1)) {
 					max = tableSize;
 				}
