@@ -172,6 +172,10 @@ public class Main {
 		arr[0] <<= 1;
 		arr[0] |= val;
 	}
+	
+	public static void setBit(long[] arr, int i) {
+		arr[i / 64] |= (1L << (i % 64));
+	}
 
 	public static void main(String[] args) {
 		if(args.length>0){
@@ -212,12 +216,12 @@ public class Main {
 			int counter = 0;
 			for(Dichotomy d = dg.generate();d!=null;d = dg.generate()) {
 				long[] res = new long[arraySize];
+				int bitPos = 0;
 				for(Dichotomy root: rootDichotomies) {
 					if(d.covers(root)) {
-						longArrayShift(res, 1);
-					} else {
-						longArrayShift(res, 0);
+						setBit(res, bitPos);
 					}
+					bitPos++;
 				}
 				if(!arrayZero(res)) {
 					boolean covered = false;
@@ -232,7 +236,7 @@ public class Main {
 					if(!covered) {
 						primes.add(d.lMask);
 						table.add(res);
-						
+						/*
 						for(int i = 0; i < table.size() - 1; i++) {
 							if(coversArray(res, table.get(i))) {
 								table.remove(i);
@@ -240,6 +244,7 @@ public class Main {
 								coveredcounter2++;
 							}
 						}
+						*/
 					}
 				}
 			}
@@ -251,18 +256,7 @@ public class Main {
 			int range = 1;
 			boolean found = false;
 			int[] resultVec = null;
-
-			/*
-			System.out.println("Sorting list with " + table.size() + " entries...");
-			table.sort(new Comparator<long[]>() {
-				@Override
-				public int compare(long[] o1, long[] o2) {
-					// TODO Auto-generated method stub
-					return countBitsInArray(o2) - countBitsInArray(o1);
-				}
-			});
-			*/
-
+			
 			System.out.print("Verifying table... ");
 			if(verifyTable(table, rootDichotomies.size())) {
 				System.out.println("Success!");
@@ -270,60 +264,62 @@ public class Main {
 				System.out.println("Failed!");
 			}
 			
-			
-			/*
-			int s = 0;
-			int maxBitCount = 0;
-			List<Integer> indices = new ArrayList();
-			int bestIndex = 0;
-			int width = rootDichotomies.size();
-			
-			while(true) {
-				long[] res = new long[arraySize];
-				
-				for(int i : indices) {
-					for(int ii = 0; ii < arraySize; ii++) {
-						res[ii] |= table.get(i)[ii];
-					}
-				}
-				
-				if(arrBitCount(res) >= width) {
-					break;
-				}
-				
-				int idx = 0;
-				for(long[] l : table) {
-					long[] r = res.clone();
-					
-					for(int ii = 0; ii < arraySize; ii++) {
-						r[ii] |= l[ii];
-					}
-					
-					int bitCount = arrBitCount(r);
-					if(bitCount > maxBitCount) {
-						maxBitCount = bitCount;
-						bestIndex = idx;
-					}
-					idx++;
-				}
-				
-				indices.add(bestIndex);
-			}
-			
-			for(int i : indices) {
-				System.out.println(i);
-			}
-			
-			for(int i : indices) {
-				printArray(table.get(i));
-			}
-			*/
-
-
 			System.out.println("Coverage table computed, starting so search...");
+
 			if(table.size() > 0) {
-				ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 32, rootDichotomies.size());
-				resultVec = coverFinder.run();
+				if(args.length >=2 && "nonexact".equals(args[1])) {
+					int s = 0;
+					int maxBitCount = 0;
+					List<Integer> indices = new ArrayList();
+					int bestIndex = 0;
+					int width = rootDichotomies.size();
+					
+					System.out.println("Doing non-exact search...");
+					
+					while(true) {
+						long[] res = new long[arraySize];
+						
+						for(int i : indices) {
+							for(int ii = 0; ii < arraySize; ii++) {
+								res[ii] |= table.get(i)[ii];
+							}
+						}
+						
+						if(arrBitCount(res) >= width) {
+							break;
+						}
+						
+						int idx = 0;
+						for(long[] l : table) {
+							long[] r = res.clone();
+							
+							for(int ii = 0; ii < arraySize; ii++) {
+								r[ii] |= l[ii];
+							}
+							
+							int bitCount = arrBitCount(r);
+							if(bitCount > maxBitCount) {
+								maxBitCount = bitCount;
+								bestIndex = idx;
+							}
+							idx++;
+						}
+						
+						indices.add(bestIndex);
+					}
+					
+					resultVec = new int[indices.size()];
+					for(int i = 0; i < indices.size(); i++) {
+						resultVec[i] = indices.get(i);
+					}
+				} else {
+					System.out.println("Doing exact search...");
+					
+					ParallelCoverFinder coverFinder = new ParallelCoverFinder(table, 32, rootDichotomies.size());
+					resultVec = coverFinder.run();
+				}
+			} else {
+				System.out.println("Coverage table is empty, this will result in binary encoding.");
 			}
 
 			System.out.println("Found minimal prime dichtomies:");

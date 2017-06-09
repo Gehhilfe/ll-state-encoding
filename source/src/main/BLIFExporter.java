@@ -99,10 +99,8 @@ public class BLIFExporter {
 		sb.append(getOutputs());
 		sb.append("\n.clock clk");
 		
-		int i = 0;
 		for(State s:stateList) {
 			sb.append("\n# "+s.getName()+" ");
-			i++;
 			sb.append(getNumBits(s.getCode(), stateBits));
 		}
 		
@@ -113,8 +111,8 @@ public class BLIFExporter {
 			sb.append(getInputs());
 			sb.append("next_S"+x);
 
+			int transCount = 0;
 			
-			//for(int currentStateNum=0;currentStateNum<fsm.getNum_states();currentStateNum++) {
 			for(State s:stateList) {
 				long l = s.getCode();
 				//long l = encoding.get(currentStateNum);
@@ -128,8 +126,16 @@ public class BLIFExporter {
 						sb.append(getNumBits(l, stateBits));
 						sb.append(getBitsPosCube(entry[1], fsm.getNumInputs()));
 						sb.append(" 1");
+						transCount++;
 					}
 				}
+			}
+			if(transCount == 0) {
+				sb.append("\n");
+				for(int i = 0; i < stateBits + fsm.getNumInputs(); i++) {
+					sb.append("-");
+				}
+				sb.append(" 0");
 			}
 			sb.append("\n.latch next_S"+x+" S"+x+" re clk 0");
 			sb.append("\n");
