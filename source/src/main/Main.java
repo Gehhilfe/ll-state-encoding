@@ -24,6 +24,16 @@ import lowlevel.State;
  */
 public class Main {
 	
+	public static int arrBitCount(long[] a) {
+		int count = 0;
+		
+		for(long l : a) {
+			count += Long.bitCount(l);
+		}
+		
+		return count;
+	}
+	
 	public static void printArray(long[] a) {
 		for(int i = a.length - 1; i >= 0; i--) {
 			for(int ii = 0; ii < Long.numberOfLeadingZeros(a[i]); ii++) {
@@ -90,7 +100,7 @@ public class Main {
 
 		for(int i = 0; i < arr.length; i++) {
 			for(int ii = 0; ii < 64; ii++) {
-				if(((arr[i] >> ii) & 1) == 1) {
+				if(((arr[i] >>> ii) & 1) == 1) {
 					count++;
 				}
 			}
@@ -104,7 +114,7 @@ public class Main {
 		while (pos-- != 0) {
 			if ((value & 0x1) != 0)
 				count++;
-			value >>= 1;
+			value >>>= 1;
 		}
 		return count;
 	};
@@ -119,7 +129,7 @@ public class Main {
 			}
 			if ((value & 0x1) != 0)
 				pos--;
-			value >>= 1;
+			value >>>= 1;
 			bitPos++;
 		}
 		return retValue;
@@ -128,7 +138,7 @@ public class Main {
 	public static int getLastBitPos(long value) {
 		int res = 0;
 		while (value != 0) {
-			value >>=1;
+			value >>>=1;
 			res++;
 		}
 		return res;
@@ -157,7 +167,7 @@ public class Main {
 	private static void longArrayShift(long[] arr, int val) {
 		for(int i = arr.length - 1; i > 0; i--) {
 			arr[i] <<= 1;
-			arr[i] |= arr[i-1] >>> 64;
+			arr[i] |= arr[i-1] >>> 63;
 		}
 		arr[0] <<= 1;
 		arr[0] |= val;
@@ -259,6 +269,55 @@ public class Main {
 			} else {
 				System.out.println("Failed!");
 			}
+			
+			
+			/*
+			int s = 0;
+			int maxBitCount = 0;
+			List<Integer> indices = new ArrayList();
+			int bestIndex = 0;
+			int width = rootDichotomies.size();
+			
+			while(true) {
+				long[] res = new long[arraySize];
+				
+				for(int i : indices) {
+					for(int ii = 0; ii < arraySize; ii++) {
+						res[ii] |= table.get(i)[ii];
+					}
+				}
+				
+				if(arrBitCount(res) >= width) {
+					break;
+				}
+				
+				int idx = 0;
+				for(long[] l : table) {
+					long[] r = res.clone();
+					
+					for(int ii = 0; ii < arraySize; ii++) {
+						r[ii] |= l[ii];
+					}
+					
+					int bitCount = arrBitCount(r);
+					if(bitCount > maxBitCount) {
+						maxBitCount = bitCount;
+						bestIndex = idx;
+					}
+					idx++;
+				}
+				
+				indices.add(bestIndex);
+			}
+			
+			for(int i : indices) {
+				System.out.println(i);
+			}
+			
+			for(int i : indices) {
+				printArray(table.get(i));
+			}
+			*/
 
 
 			System.out.println("Coverage table computed, starting so search...");

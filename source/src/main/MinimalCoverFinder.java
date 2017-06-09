@@ -32,7 +32,7 @@ public class MinimalCoverFinder {
 			if(val != 0) {
 				counter += 1;
 			}
-			l >>= 1;
+			l >>>= 1;
 		};
 		return counter;
 	}
@@ -46,7 +46,7 @@ public class MinimalCoverFinder {
 				if(counter == 2)
 					return false;
 			}
-			l >>= 1;
+			l >>>= 1;
 		};
 		if(counter == 1)
 			return true;
