@@ -1,0 +1,15 @@
+\chapter{Evaluation}
+This evaluation analysis the performance and drawbacks of an exact binary state encoding. To measure the result quality we used the ABC a tool for sequential synthesis and verification. Our implementation exports a complete finite state machine using the before computed encoding solution. As required by the minitasked abc was used to mapped the state machine onto LUTs.
+
+\section{Runtime}
+
+\section{Mapping Result}
+
+\section{Verdict}
+As seen in the mapping result compared to one hot encoding binary state encoding using dichotomies delivers worse result for the target technology FPGA, when area consumption is compared. For this technology a reduction for boolean function below 5 inputs doest reduce the used area, as seen in the lut description.
+
+\myworries{LUT description}
+
+For example, when using a gate array target technology the amount of used logic gates and latches is reduced compared to a one hot encoding. \myworries{Reference to result table with latches}
+
+To summaries, an exact encoding algorithm should only be used if the target technology can utilize the improved solution and when the resulting enormous runtime increase is acceptable. 
