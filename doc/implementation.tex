@@ -26,10 +26,23 @@ Using the before created table it is now possible to look for a minimal set of p
 
 \section{Optimizations}
 
-The complexity to find an exact solution scales with $\left( n\atop k \right)$, where $n$ is the size of the coverage table and $k$ is the amount of lines that are combined to find a solution. One way to shorten runtime is to reduce the table size. Another way is to find a faster algorithm to search the table, but this comes at the cost of non-exact solutions.
+The complexity to find an exact solution scales with $\left( n\atop k \right)$, where $n$ is the size of the coverage table and $k$ is the amount of lines that are combined to find a solution. One way to shorten runtime is to reduce the table size. Another way is to find a faster algorithm to search the table, but this comes at the cost of non-exact solutions. It is also desirable to parallelize the process of searching the coverage table to utilize multiple processors.
 
 \subsection{Coverage Table minimization}
 
 Some entries in the coverage table can be removed without lowering the result quality. A line $l_1$ in the table is eligible for removal if it is covered by another line $l_2$ in the table. $l_1$ is covered by $l_2$ if all bits that are set in $l_1$ are also set in $l_2$. Reducing the table size in this way takes additional time and is more expensive for large tables, but it can reduce table sizes drastically. Evaluation has shown that large coverage tables can be reduced by a factor of 2.
 
+\subsection{Parallelization}
+
+The search for a solution in the coverage table can be parallelized by partitioning the set of all possible combinations of table entries. After the partitions are formed they are assigned to a thread that combines the table entries and checks whether a valid solution was found. When all combinations in the partition have been checked the thread requests another partition that is then checked for a solution.
+
 \subsection{Non exact solution}
+
+Large problems that result in big coverage tables take a long time to find an exact solution. The runtime becomes so long that it is impractical to search for an exact solution. Because of this we also implemented an algorithm that searches for a non exact solution. It works in the following way:
+\begin{enumerate}
+\item Select the entry from the coverage table that has the most bits set. If a valid solution is already found abort the search.
+\item Try every entry from the coverage table by combining it with the previously selected entry/entries and save the number of additional bits that are set after combining the entries.
+\item Select the entry that adds the most set bits to the result. If a valid solution is found abort the process. If not repeat step 2 and 3 until a solution is found.
+\end{enumerate}
+
+This non exact approach results in drastically reduced runtime but will typically generate worse results than the exact approach. Both algorithms are compared in chapter \ref{cha:evaluation}.
