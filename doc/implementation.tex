@@ -51,5 +51,7 @@ This non exact approach results in drastically reduced runtime but will typicall
 
 The implementation sets some limitations to the problems that can be solved:
 \begin{itemize}
-\item 
+\item \textbf{Number of states:} States are internally represented as a one hot encoded long variable. This limits the number of states to a maximum of 64. State machines with more states can not be processed, however the runtime required to find an exact solution for such complex problems would be extremely high anyway.
+\item \textbf{Size of coverage table:} Large state machines result in a large coverage table. This poses two problems: The host machine may run out of available memory and the Java garbage collector will be responsibly for most of the execution time. This makes the program less efficient and will eventually result in its termination by the Java VM.
+\item \textbf{Runtime:} Finding an exact solution can take very long for complex state machines. It is possible to use the non exact algorithm, but this will result in worse results.
 \end{itemize}
