@@ -1,0 +1,11 @@
+Warning: Constant-0 drivers added to 5 non-driven nets in network "mark1":
+O11, O12, O15, sta2 ...
+The network was strashed and balanced before FPGA mapping.
+Maximum level: Original = 6. Reduced due to choices = 6.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =     87. Total 6-cuts = 297. Cuts per node = 3.4. Time =   0.00 sec
+Iteration 1D :  Area =     12.5  Delay =  2.00  Time =   0.00 sec
+Iteration 2F :  Area =     12.5  Delay =  2.00  Time =   0.00 sec
+Iteration 3A :  Area =     12.5  Delay =  2.00  Time =   0.00 sec
+Total time =   0.00 sec
+mark1        : i/o =    6/  16  lat =   26  nd =    35  net =   100  bdd  =    98  lev =   2

@@ -1,19 +1,21 @@
 #!/bin/bash
 trap "exit" INT
 
-rm -f success.txt timeout.txt
-
 for i in `ls -1 benchmarks/kiss_files_sorted/*.kiss2`; do
-	echo "--------"	
+	if [[ ! -z $(grep "$i" success.txt) ]]; then
+		echo "File already covered: $i"
+		continue
+	fi
+	echo "--------"
 	echo $i
 	start=$(date +%s)
-	timeout 1m java -cp bin/ main.Main $i > /dev/null
+	timeout 2h java -Xmx50g -cp build/ main.Main $i nonexact
 	retcode=$?
 	end=$(date +%s)
 	time=`expr $end - $start`
 	echo $time
 	if [ $retcode -eq "0" ]; then
-		echo $i >> success.txt
+		echo $i $time >> success.txt
 	else
 		echo $i >> timeout.txt
 	fi

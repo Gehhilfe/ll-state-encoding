@@ -1,0 +1,11 @@
+Warning: Constant-0 drivers added to 4 non-driven nets in network "s1488":
+O15, O16, O17, O18 ...
+The network was strashed and balanced before FPGA mapping.
+Maximum level: Original = 8. Reduced due to choices = 8.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =    499. Total 6-cuts = 3798. Cuts per node = 7.6. Time =   0.00 sec
+Iteration 1D :  Area =     79.0  Delay =  3.00  Time =   0.00 sec
+Iteration 2F :  Area =     75.0  Delay =  3.00  Time =   0.00 sec
+Iteration 3A :  Area =     75.0  Delay =  3.00  Time =   0.00 sec
+Total time =   0.01 sec
+s1488        : i/o =   10/  19  lat =   63  nd =   146  net =   554  bdd  =   651  lev =   3

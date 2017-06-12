@@ -1,0 +1,76 @@
+.model 012_modulo12.kiss2
+.inputs I0 
+.outputs O0 
+.clock clk
+# st2 1010
+# st1 1011
+# st4 1000
+# st3 1001
+# st6 0110
+# st5 1110
+# st8 0100
+# st10 0101
+# st7 0010
+# st11 0011
+# st9 0000
+# st0 0001
+.names S0 S1 S2 S3 I0 next_S0
+10100 1
+10101 1
+10110 1
+10111 1
+10000 1
+10001 1
+10010 1
+10011 1
+11100 1
+00011 1
+.latch next_S0 S0 re clk 0
+
+
+.names S0 S1 S2 S3 I0 next_S1
+10001 1
+01100 1
+11100 1
+11101 1
+01000 1
+01010 1
+00101 1
+00001 1
+.latch next_S1 S1 re clk 0
+
+
+.names S0 S1 S2 S3 I0 next_S2
+10100 1
+10110 1
+10111 1
+10001 1
+01100 1
+01101 1
+11100 1
+11101 1
+01011 1
+00100 1
+00110 1
+00011 1
+.latch next_S2 S2 re clk 0
+
+
+.names S0 S1 S2 S3 I0 next_S3
+10101 1
+10110 1
+10010 1
+01010 1
+01011 1
+00110 1
+00111 1
+00001 1
+00010 1
+00011 1
+.latch next_S3 S3 re clk 0
+
+
+.names S0 S1 S2 S3 I0 next_O0
+----- 0
+.latch next_O0 O0 re clk 0
+

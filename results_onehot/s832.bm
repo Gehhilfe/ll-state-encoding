@@ -1,0 +1,11 @@
+Warning: Constant-0 drivers added to 4 non-driven nets in network "s832":
+O15, O16, O17, O18 ...
+The network was strashed and balanced before FPGA mapping.
+Maximum level: Original = 13. Reduced due to choices = 13.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =    331. Total 6-cuts = 2526. Cuts per node = 7.6. Time =   0.00 sec
+Iteration 1D :  Area =     51.0  Delay =  3.00  Time =   0.00 sec
+Iteration 2F :  Area =     47.5  Delay =  3.00  Time =   0.00 sec
+Iteration 3A :  Area =     47.5  Delay =  3.00  Time =   0.00 sec
+Total time =   0.00 sec
+s832         : i/o =   20/  19  lat =   40  nd =   103  net =   377  bdd  =   439  lev =   3

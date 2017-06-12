@@ -1,0 +1,37 @@
+.model 004_lion.kiss2
+.inputs I0 I1 
+.outputs O0 
+.clock clk
+# st2 11
+# st1 01
+# st3 10
+# st0 00
+.names S0 S1 I0 I1 next_S0
+1110 1
+11-1 1
+0101 1
+10-0 1
+1011 1
+.latch next_S0 S0 re clk 0
+
+
+.names S0 S1 I0 I1 next_S1
+1100 1
+11-1 1
+01-0 1
+0101 1
+1011 1
+0010 1
+.latch next_S1 S1 re clk 0
+
+
+.names S0 S1 I0 I1 next_O0
+1100 1
+1110 1
+11-1 1
+01-0 1
+0101 1
+10-0 1
+1011 1
+.latch next_O0 O0 re clk 0
+

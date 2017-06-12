@@ -9,6 +9,6 @@ then
 fi
 
 echo ${FILENAME%.blif}
-../abc/abc -c "read_lut ../abc/6-lut-lib; read_blif $FILENAME; fpga -v; print_stats" |grep -vi "skip" > ${FILENAME%.blif}.bm
+../abc/abc.bin -c "read_lut ../abc/6-lut-lib; read_blif $FILENAME; fpga -v; print_stats" |grep -vi "skip" > ${FILENAME%.blif}.bm
 
 exit 0

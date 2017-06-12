@@ -224,6 +224,7 @@ public class Main {
 					bitPos++;
 				}
 				if(!arrayZero(res)) {
+					
 					boolean covered = false;
 					for(long[] l : table) {
 						if(coversArray(l, res)) {

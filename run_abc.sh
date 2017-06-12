@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_PATH=results_nonexact
+TARGET_PATH=results_exact
 ABC_PATH=abc/
 
 for i in $(ls -1 $TARGET_PATH/*.blif); do
