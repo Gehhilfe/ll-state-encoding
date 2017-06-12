@@ -1,0 +1,66 @@
+.model 006_bbtas.kiss2
+.inputs I0 I1 
+.outputs O0 O1 
+.clock clk
+# st2 1000
+# st1 1001
+# st4 0110
+# st3 0100
+# st5 0010
+# st0 0000
+.names S0 S1 S2 S3 I0 I1 next_S0
+100000 1
+100110 1
+100101 1
+100111 1
+000010 1
+000001 1
+000011 1
+.latch next_S0 S0 re clk 0
+
+
+.names S0 S1 S2 S3 I0 I1 next_S1
+100010 1
+100001 1
+100011 1
+011010 1
+011001 1
+011011 1
+010000 1
+010010 1
+010001 1
+010011 1
+.latch next_S1 S1 re clk 0
+
+
+.names S0 S1 S2 S3 I0 I1 next_S2
+011000 1
+011010 1
+011001 1
+011011 1
+010000 1
+001010 1
+001001 1
+001011 1
+.latch next_S2 S2 re clk 0
+
+
+.names S0 S1 S2 S3 I0 I1 next_S3
+100000 1
+000010 1
+000001 1
+000011 1
+.latch next_S3 S3 re clk 0
+
+
+.names S0 S1 S2 S3 I0 I1 next_O0
+010010 1
+010011 1
+.latch next_O0 O0 re clk 0
+
+
+.names S0 S1 S2 S3 I0 I1 next_O1
+010001 1
+010011 1
+.latch next_O1 O1 re clk 0
+

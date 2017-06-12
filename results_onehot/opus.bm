@@ -1,0 +1,9 @@
+The network was strashed and balanced before FPGA mapping.
+Maximum level: Original = 8. Reduced due to choices = 8.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =     90. Total 6-cuts = 467. Cuts per node = 5.2. Time =   0.00 sec
+Iteration 1D :  Area =     12.0  Delay =  2.00  Time =   0.00 sec
+Iteration 2F :  Area =     12.0  Delay =  2.00  Time =   0.00 sec
+Iteration 3A :  Area =     12.0  Delay =  2.00  Time =   0.00 sec
+Total time =   0.00 sec
+opus         : i/o =    8/   6  lat =   16  nd =    25  net =   106  bdd  =   111  lev =   2

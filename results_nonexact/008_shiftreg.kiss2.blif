@@ -1,0 +1,59 @@
+.model 008_shiftreg.kiss2
+.inputs I0 
+.outputs O0 
+.clock clk
+# st2 110
+# st1 100
+# st4 111
+# st3 101
+# st6 000
+# st5 010
+# st7 011
+# st0 001
+.names S0 S1 S2 I0 next_S0
+1100 1
+1001 1
+1110 1
+1010 1
+0000 1
+0100 1
+0110 1
+0011 1
+.latch next_S0 S0 re clk 0
+
+
+.names S0 S1 S2 I0 next_S1
+1101 1
+1001 1
+1110 1
+1011 1
+0001 1
+0100 1
+0111 1
+0011 1
+.latch next_S1 S1 re clk 0
+
+
+.names S0 S1 S2 I0 next_S2
+1000 1
+1001 1
+0000 1
+0001 1
+0110 1
+0111 1
+0010 1
+0011 1
+.latch next_S2 S2 re clk 0
+
+
+.names S0 S1 S2 I0 next_O0
+1000 1
+1001 1
+1010 1
+1011 1
+0100 1
+0101 1
+0110 1
+0111 1
+.latch next_O0 O0 re clk 0
+

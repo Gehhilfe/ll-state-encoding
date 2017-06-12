@@ -9,7 +9,7 @@ public class DichotomyGenerator {
 	DichotomyGenerator(int width) {
 		this.width = width;
 		this.lastMask = 1;
-		this.fullMask = (1<<(width+1))-1;
+		this.fullMask = (1L<<(width+1))-1;
 	}
 	
 	public Dichotomy generate() {

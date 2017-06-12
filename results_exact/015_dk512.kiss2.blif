@@ -1,0 +1,108 @@
+.model 015_dk512.kiss2
+.inputs I0 
+.outputs O0 O1 O2 
+.clock clk
+# sta_13 11110
+# sta_12 11010
+# sta_15 10000
+# sta_14 10100
+# sta_9 10010
+# sta_7 11000
+# sta_11 01010
+# sta_8 01110
+# sta_10 01011
+# sta_1 01000
+# sta_2 01100
+# sta_5 00100
+# sta_6 00110
+# sta_3 00010
+# sta_4 00000
+.names S0 S1 S2 S3 S4 I0 next_S0
+101001 1
+110001 1
+010001 1
+001001 1
+001100 1
+001101 1
+.latch next_S0 S0 re clk 0
+
+
+.names S0 S1 S2 S3 S4 I0 next_S1
+101001 1
+011100 1
+011101 1
+010110 1
+010111 1
+010000 1
+001000 1
+001001 1
+001100 1
+000000 1
+000001 1
+.latch next_S1 S1 re clk 0
+
+
+.names S0 S1 S2 S3 S4 I0 next_S2
+111100 1
+111101 1
+100001 1
+011101 1
+010111 1
+010000 1
+001000 1
+001100 1
+001101 1
+000100 1
+000101 1
+000000 1
+.latch next_S2 S2 re clk 0
+
+
+.names S0 S1 S2 S3 S4 I0 next_S3
+111101 1
+110101 1
+100001 1
+101000 1
+100101 1
+010100 1
+010000 1
+010001 1
+011001 1
+001000 1
+001001 1
+001100 1
+000101 1
+000000 1
+000001 1
+.latch next_S3 S3 re clk 0
+
+
+.names S0 S1 S2 S3 S4 I0 next_S4
+------ 0
+.latch next_S4 S4 re clk 0
+
+
+.names S0 S1 S2 S3 S4 I0 next_O0
+110101 1
+100101 1
+011100 1
+011101 1
+.latch next_O0 O0 re clk 0
+
+
+.names S0 S1 S2 S3 S4 I0 next_O1
+010100 1
+010101 1
+010110 1
+010111 1
+.latch next_O1 O1 re clk 0
+
+
+.names S0 S1 S2 S3 S4 I0 next_O2
+111100 1
+111101 1
+110100 1
+101000 1
+101001 1
+.latch next_O2 O2 re clk 0
+

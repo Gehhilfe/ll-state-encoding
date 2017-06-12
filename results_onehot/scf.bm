@@ -1,0 +1,11 @@
+Warning: Constant-0 drivers added to 29 non-driven nets in network "scf":
+O15, O16, O17, O18 ...
+The network was strashed and balanced before FPGA mapping.
+Maximum level: Original = 15. Reduced due to choices = 15.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =    291. Total 6-cuts = 444. Cuts per node = 1.5. Time =   0.00 sec
+Iteration 1D :  Area =     29.0  Delay =  2.00  Time =   0.00 sec
+Iteration 2F :  Area =     28.5  Delay =  2.00  Time =   0.00 sec
+Iteration 3A :  Area =     28.5  Delay =  2.00  Time =   0.00 sec
+Total time =   0.00 sec
+scf          : i/o =   29/  56  lat =  148  nd =   179  net =   467  bdd  =   470  lev =   2

@@ -1,0 +1,65 @@
+.model 004_mc.kiss2
+.inputs I0 I1 I2 
+.outputs O0 O1 O2 O3 O4 
+.clock clk
+# HY 00
+# FG 10
+# FY 01
+# HG 11
+.names S0 S1 I0 I1 I2 next_S0
+001-- 1
+10-01 1
+011-- 1
+11-0- 1
+11--0 1
+.latch next_S0 S0 re clk 0
+
+
+.names S0 S1 I0 I1 I2 next_S1
+10-1- 1
+10--0 1
+010-- 1
+011-- 1
+11-0- 1
+11--0 1
+.latch next_S1 S1 re clk 0
+
+
+.names S0 S1 I0 I1 I2 next_O0
+010-- 1
+011-- 1
+.latch next_O0 O0 re clk 0
+
+
+.names S0 S1 I0 I1 I2 next_O1
+000-- 1
+001-- 1
+11-0- 1
+11-11 1
+11--0 1
+.latch next_O1 O1 re clk 0
+
+
+.names S0 S1 I0 I1 I2 next_O2
+000-- 1
+001-- 1
+.latch next_O2 O2 re clk 0
+
+
+.names S0 S1 I0 I1 I2 next_O3
+10-01 1
+10-1- 1
+10--0 1
+010-- 1
+011-- 1
+.latch next_O3 O3 re clk 0
+
+
+.names S0 S1 I0 I1 I2 next_O4
+001-- 1
+10-1- 1
+10--0 1
+011-- 1
+11-11 1
+.latch next_O4 O4 re clk 0
+

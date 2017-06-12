@@ -1,0 +1,52 @@
+.model 007_dk27.kiss2
+.inputs I0 
+.outputs O0 O1 
+.clock clk
+# sta6 0000
+# sta7 1000
+# sta4 1010
+# sta5 0010
+# sta2 0100
+# sta3 0110
+# START 0001
+.names S0 S1 S2 S3 I0 next_S0
+01101 1
+00011 1
+.latch next_S0 S0 re clk 0
+
+
+.names S0 S1 S2 S3 I0 next_S1
+00001 1
+00101 1
+01001 1
+.latch next_S1 S1 re clk 0
+
+
+.names S0 S1 S2 S3 I0 next_S2
+10000 1
+01000 1
+01001 1
+01100 1
+00011 1
+.latch next_S2 S2 re clk 0
+
+
+.names S0 S1 S2 S3 I0 next_S3
+00000 1
+00100 1
+.latch next_S3 S3 re clk 0
+
+
+.names S0 S1 S2 S3 I0 next_O0
+00000 1
+00001 1
+.latch next_O0 O0 re clk 0
+
+
+.names S0 S1 S2 S3 I0 next_O1
+10001 1
+10101 1
+00100 1
+00101 1
+.latch next_O1 O1 re clk 0
+
