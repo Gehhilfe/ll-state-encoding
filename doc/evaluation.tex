@@ -9,25 +9,35 @@ This evaluation analysis the performance and drawbacks of an exact binary state 
 Overall the runtime seems to be in a relation to the number of states, as seen in table \ref{tab:exact}. When comparing our exact and non exact approach more benchmarks are completed in a feasible time. To exclude a faulty implementation the benchmark \textit{results\_exact/015\_dk512.kiss2.blif} was run until completion. This benchmark was the first benchmark that didn't finish in $\SI{1}{\hour}$. The non exact solution for this benchmark is much quicker but also equal performance measured in Area, Delay and Latches. But this is not for all cases true. For example, benchmark \textit{results\_exact/011\_train11.kiss2.blif} yield a worse result regarding these criteria.
 
 
-The two benchmark \textit{results\_exact/020\_tma.kiss2.blif} and \textit{results\_exact/024\_pma.kiss2.blif} are finished fast, because of the empty constraint matrix $A$. An empty constraint matrix result into a binary encoding. 
+The two benchmark \textit{results\_exact/020\_tma.kiss2.blif} and \textit{results\_exact/024\_pma.kiss2.blif} are finished fast, because of the empty constraint matrix $A$. An empty constraint matrix result into a binary encoding. All other benchmarks with more than 16 states timed out when attempting to find an exact solution. Using the non exact approach, solutions can be found for state machines with up to 27 states.
 
 \section{Mapping Result}
 
 As shown in figure \ref{fig:diff}, the non-exact solution performs for all benchmarks worse or equal, excluding the benchmark \textit{results\_exact/008\_ex6.kiss2.blif}. For some benchmarks up to twice the fpga resource usage. The chosen target fpga technology isn't ideal for comparing exact or near exact solutions, because small differences in the transition function complexity usually yield the same result.
 
+Figure \ref{fig:diff_onehot} shows the difference between exact binary encoding using dichotomies and one hot encoding. The main difference is that one hot encoding can solve all problems in a reasonable time. Regarding the results, our exact approach always needs fewer latches and often also less area and delay. The results of the one hot encoder were provided by Kadir and Aljoscha.
+
+For detailed results see table \ref{tab:exact} and table \ref{tab:nonexact}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics{graphics/diff.png}
-	\caption{Difference between non- and exact solution compared by area, latches and delay.}
+	\caption{Normalized difference between non- and exact solution compared by area, latches and delay.}
 	\label{fig:diff}
 \end{figure}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics{graphics/diff_onehot.png}
+	\caption{Normalized difference between exact solution and one hot encoding compared by area, latches and delay.}
+	\label{fig:diff_onehot}
+\end{figure}
+
 \section{Verdict}
-As seen in the mapping result compared to one hot encoding binary state encoding using dichotomies delivers worse result for the target technology FPGA, when area consumption is compared. For this technology a reduction for boolean function below 5 inputs doest reduce the used area, as seen in the lut description.
+As seen in the mapping result compared to one hot encoding binary state encoding using dichotomies delivers equal or better results for the target technology FPGA, when area consumption and delay are compared.
 
-\myworries{LUT description}
 
-For example, when using a gate array target technology the amount of used logic gates and latches is reduced compared to a one hot encoding. \myworries{Reference to result table with latches}
+For example, when using a gate array target technology the amount of used logic gates and latches is reduced compared to a one hot encoding.
 
 To summaries, an exact encoding algorithm should only be used if the target technology can utilize the improved solution and when the resulting enormous runtime increase is acceptable. 
 
@@ -123,4 +133,5 @@ results\_nonexact/027\_dk16.kiss2.blif & 60.0 & 3.00 & 10 & 1243 \\
 		\hline
 	\end{tabular}
 	\caption{Results of Non-Exact Encoding Approach Using Dichotomies}
+	\label{tab:nonexact}
 \end{table}
