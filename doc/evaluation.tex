@@ -2,13 +2,25 @@
 
 \label{cha:evaluation}
 
-This evaluation analysis the performance and drawbacks of an exact binary state encoding. To measure the result quality we used the ABC a tool for sequential synthesis and verification. Our implementation exports a complete finite state machine using the before computed encoding solution. As required by the minitasked abc was used to mapped the state machine onto LUTs.
+This evaluation analysis the performance and drawbacks of an exact binary state encoding. To measure the result quality we used the ABC a tool for sequential synthesis and verification. Our implementation exports a complete finite state machine using the before computed encoding solution. As required by the minitasked abc was used to mapped the state machine onto LUTs. For each benchmark the execution time was limited to $\SI{1}{\hour}$. One exception was made for benchmark \textit{results\_exact/015\_dk512.kiss2.blif}, which ran for about $\approx \SI{16}{\hour}$.
 
 \section{Runtime}
 
-\csvreader[tabular=|l|l|l|l|,table head=State Machine & Area & Delay & Latch & Runtime]{results_exact.csv}{State_Machine=\a, Area=\b, Delay=\c, Latch=\d, Runtime=\e}{\a & \b & \c & \d & \e}
+Overall the runtime seems to be in a relation to the number of states, as seen in table \ref{tab:exact}. When comparing our exact and non exact approach more benchmarks are completed in a feasible time. To exclude a faulty implementation the benchmark \textit{results\_exact/015\_dk512.kiss2.blif} was run until completion. This benchmark was the first benchmark that didn't finish in $\SI{1}{\hour}$. The non exact solution for this benchmark is much quicker but also equal performance measured in Area, Delay and Latches. But this is not for all cases true. For example, benchmark \textit{results\_exact/011\_train11.kiss2.blif} yield a worse result regarding these criteria.
+
+
+The two benchmark \textit{results\_exact/020\_tma.kiss2.blif} and \textit{results\_exact/024\_pma.kiss2.blif} are finished fast, because of the empty constraint matrix $A$. An empty constraint matrix result into a binary encoding. 
 
 \section{Mapping Result}
+
+As shown in figure \ref{fig:diff}, the non-exact solution performs for all benchmarks worse or equal, excluding the benchmark \textit{results\_exact/008\_ex6.kiss2.blif}. For some benchmarks up to twice the fpga resource usage. The chosen target fpga technology isn't ideal for comparing exact or near exact solutions, because small differences in the transition function complexity usually yield the same result.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics{graphics/diff.png}
+	\caption{Difference between non- and exact solution compared by area, latches and delay.}
+	\label{fig:diff}
+\end{figure}
 
 \section{Verdict}
 As seen in the mapping result compared to one hot encoding binary state encoding using dichotomies delivers worse result for the target technology FPGA, when area consumption is compared. For this technology a reduction for boolean function below 5 inputs doest reduce the used area, as seen in the lut description.
@@ -19,3 +31,96 @@ For example, when using a gate array target technology the amount of used logic 
 
 To summaries, an exact encoding algorithm should only be used if the target technology can utilize the improved solution and when the resulting enormous runtime increase is acceptable. 
 
+\chapter*{Results Data}
+
+\begin{table}[h]
+\centering
+	\begin{tabular}{|l|r|r|r|r|}
+	\hline
+		\textbf{State Machine} & \textbf{Area} & \textbf{Delay} & \textbf{Latch} & \textbf{Runtime}\\
+		\hline
+		results\_exact/004\_dk15.kiss2.blif & 8.0 & 1.00 & 8 & 0\\
+		results\_exact/004\_lion.kiss2.blif & 1.5 & 1.00 & 3 & 0\\
+		results\_exact/004\_mc.kiss2.blif & 3.5 & 1.00 & 7 & 0\\
+		results\_exact/004\_tav.kiss2.blif & 8.0 & 2.00 & 7 & 1\\
+		results\_exact/004\_train4.kiss2.blif & 1.5 & 1.00 & 3 & 0\\
+		results\_exact/005\_s8.kiss2.blif & 7.0 & 2.00 & 4 & 0\\
+		results\_exact/006\_bbtas.kiss2.blif & 5.0 & 1.00 & 6 & 0\\
+		results\_exact/006\_s27.kiss2.blif & 7.5 & 2.00 & 5 & 1\\
+		results\_exact/007\_beecount.kiss2.blif & 10.0 & 2.00 & 8 & 0\\
+		results\_exact/007\_dk14.kiss2.blif & 8.0 & 1.00 & 8 & 0\\
+		results\_exact/007\_dk27.kiss2.blif & 2.5 & 1.00 & 5 & 0\\
+		results\_exact/008\_dk17.kiss2.blif & 6.5 & 1.00 & 7 & 1\\
+		results\_exact/008\_ex6.kiss2.blif & 30.5 & 3.00 & 12 & 0\\
+		results\_exact/008\_shiftreg.kiss2.blif & 1.5 & 1.00 & 4 & 0\\
+		results\_exact/009\_ex5.kiss2.blif & 5.0 & 1.00 & 6 & 1\\
+		results\_exact/009\_lion9.kiss2.blif & 5.0 & 1.00 & 5 & 0\\
+		results\_exact/010\_bbara.kiss2.blif & 21.0 & 3.00 & 7 & 1\\
+		results\_exact/010\_ex3.kiss2.blif & 6.0 & 1.00 & 6 & 1\\
+		results\_exact/010\_ex7.kiss2.blif & 5.0 & 1.00 & 6 & 0\\
+		results\_exact/010\_opus.kiss2.blif & 19.0 & 3.00 & 10 & 1\\
+		results\_exact/011\_train11.kiss2.blif & 10.0 & 2.00 & 6 & 13\\
+		results\_exact/012\_modulo12.kiss2.blif & 2.0 & 1.00 & 5 & 1\\
+		results\_exact/014\_ex4.kiss2.blif & 16.0 & 2.00 & 14 & 6\\
+		results\_exact/015\_dk512.kiss2.blif & 6.5 & 1.00 & 8 & 60000\\
+		results\_exact/020\_tma.kiss2.blif & 39.5 & 3.00 & 11 & 0\\
+		results\_exact/024\_pma.kiss2.blif & 88.5 & 4.00 & 13 & 1\\
+		\hline
+	\end{tabular}
+	\caption{Results of Exact Encoding Approach Using Dichotomies}
+	\label{tab:exact}
+\end{table}
+
+\begin{table}[h]
+\centering
+	\begin{tabular}{|l|r|r|r|r|}
+	\hline
+		\textbf{State Machine} & \textbf{Area} & \textbf{Delay} & \textbf{Latch} & \textbf{Runtime}\\
+		\hline
+results\_nonexact/004\_dk15.kiss2.blif & 8.0 & 1.00 & 8 & 0 \\
+results\_nonexact/004\_lion.kiss2.blif & 1.5 & 1.00 & 3 & 0 \\
+results\_nonexact/004\_mc.kiss2.blif & 3.5 & 1.00 & 7 & 0 \\
+results\_nonexact/004\_tav.kiss2.blif & 8.0 & 2.00 & 7 & 0 \\
+results\_nonexact/004\_train4.kiss2.blif & 1.5 & 1.00 & 3 & 0 \\
+results\_nonexact/005\_s8.kiss2.blif & 7.0 & 2.00 & 4 & 1 \\
+results\_nonexact/006\_bbtas.kiss2.blif & 5.0 & 1.00 & 6 & 0 \\
+results\_nonexact/006\_s27.kiss2.blif & 11.5 & 2.00 & 5 & 0 \\
+results\_nonexact/007\_beecount.kiss2.blif & 10.0 & 2.00 & 8 & 0 \\
+results\_nonexact/007\_dk14.kiss2.blif & 8.0 & 1.00 & 8 & 0 \\
+results\_nonexact/007\_dk27.kiss2.blif & 3.0 & 1.00 & 6 & 0 \\
+results\_nonexact/008\_dk17.kiss2.blif & 20.0 & 3.00 & 9 & 0 \\
+results\_nonexact/008\_ex6.kiss2.blif & 25.0 & 3.00 & 12 & 0 \\
+results\_nonexact/008\_shiftreg.kiss2.blif & 2.0 & 1.00 & 4 & 0 \\
+results\_nonexact/009\_ex5.kiss2.blif & 5.0 & 1.00 & 6 & 1 \\
+results\_nonexact/009\_lion9.kiss2.blif & 13.5 & 2.00 & 6 & 0 \\
+results\_nonexact/010\_bbara.kiss2.blif & 21.5 & 3.00 & 7 & 0 \\
+results\_nonexact/010\_ex3.kiss2.blif & 6.0 & 1.00 & 6 & 0 \\
+results\_nonexact/010\_ex7.kiss2.blif & 5.0 & 1.00 & 6 & 0 \\
+results\_nonexact/010\_opus.kiss2.blif & 24.0 & 3.00 & 11 & 0 \\
+results\_nonexact/011\_train11.kiss2.blif & 18.0 & 3.00 & 7 & 0 \\
+results\_nonexact/012\_modulo12.kiss2.blif & 2.0 & 1.00 & 5 & 0 \\
+results\_nonexact/013\_s386.kiss2.blif & 42.0 & 3.00 & 12 & 0 \\
+results\_nonexact/014\_ex4.kiss2.blif & 17.0 & 2.00 & 14 & 1 \\
+results\_nonexact/015\_dk512.kiss2.blif & 6.5 & 1.00 & 8 & 0 \\
+results\_nonexact/015\_mark1.kiss2.blif & 46.0 & 4.00 & 26 & 0 \\
+results\_nonexact/016\_bbsse.kiss2.blif & 32.0 & 3.00 & 12 & 1 \\
+results\_nonexact/016\_cse.kiss2.blif & 60.5 & 4.00 & 13 & 0 \\
+results\_nonexact/016\_kirkman.kiss2.blif & 43.0 & 4.00 & 11 & 1 \\
+results\_nonexact/016\_sse.kiss2.blif & 48.5 & 4.00 & 13 & 0 \\
+results\_nonexact/018\_s208.kiss2.blif & 61.0 & 4.00 & 8 & 2 \\
+results\_nonexact/018\_s420.kiss2.blif & 44.0 & 4.00 & 7 & 2 \\
+results\_nonexact/019\_ex2.kiss2.blif & 19.0 & 3.00 & 7 & 1 \\
+results\_nonexact/019\_keyb.kiss2.blif & 65.0 & 5.00 & 8 & 4 \\
+results\_nonexact/020\_ex1.kiss2.blif & 77.5 & 4.00 & 26 & 4 \\
+results\_nonexact/020\_s1a.kiss2.blif & 109.0 & 4.00 & 14 & 6 \\
+results\_nonexact/020\_s1.kiss2.blif & 119.0 & 5.00 & 13 & 11 \\
+results\_nonexact/020\_tma.kiss2.blif & 39.5 & 3.00 & 11 & 0 \\
+results\_nonexact/024\_donfile.kiss2.blif & 19.5 & 3.00 & 6 & 66 \\
+results\_nonexact/024\_pma.kiss2.blif & 88.5 & 4.00 & 13 & 0 \\
+results\_nonexact/025\_s820.kiss2.blif & 153.5 & 6.00 & 27 & 393 \\
+results\_nonexact/025\_s832.kiss2.blif & 158.0 & 6.00 & 28 & 452 \\
+results\_nonexact/027\_dk16.kiss2.blif & 60.0 & 3.00 & 10 & 1243 \\
+		\hline
+	\end{tabular}
+	\caption{Results of Non-Exact Encoding Approach Using Dichotomies}
+\end{table}

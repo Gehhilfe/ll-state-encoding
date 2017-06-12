@@ -1,27 +1,27 @@
-State_Machine,Area,Delay,Latch,nd,net,bdd,lev,Runtime
-results_exact/004_dk15.kiss2.blif,8.0,1.00,8,8,48,111,1,0
-results_exact/004_lion.kiss2.blif,1.5,1.00,3,3,12,15,1,0
-results_exact/004_mc.kiss2.blif,3.5,1.00,7,7,22,36,1,0
-results_exact/004_tav.kiss2.blif,8.0,2.00,7,14,56,71,2,1
-results_exact/004_train4.kiss2.blif,1.5,1.00,3,3,12,16,1,0
-results_exact/005_s8.kiss2.blif,7.0,2.00,4,11,48,72,2,0
-results_exact/006_bbtas.kiss2.blif,5.0,1.00,6,6,34,47,1,0
-results_exact/006_s27.kiss2.blif,7.5,2.00,5,11,52,92,2,1
-results_exact/007_beecount.kiss2.blif,10.0,2.00,8,15,63,125,2,0
-results_exact/007_dk14.kiss2.blif,8.0,1.00,8,8,48,105,1,0
-results_exact/007_dk27.kiss2.blif,2.5,1.00,5,5,19,26,1,0
-results_exact/008_dk17.kiss2.blif,6.5,1.00,7,7,41,114,1,1
-results_exact/008_ex6.kiss2.blif,30.5,3.00,12,50,236,372,3,0
-results_exact/008_shiftreg.kiss2.blif,1.5,1.00,4,4,10,9,1,0
-results_exact/009_ex5.kiss2.blif,5.0,1.00,6,6,36,96,1,1
-results_exact/009_lion9.kiss2.blif,5.0,1.00,5,5,30,77,1,0
-results_exact/010_bbara.kiss2.blif,21.0,3.00,7,36,162,221,3,1
-results_exact/010_ex3.kiss2.blif,6.0,1.00,6,6,36,90,1,1
-results_exact/010_ex7.kiss2.blif,5.0,1.00,6,6,36,91,1,0
-results_exact/010_opus.kiss2.blif,19.0,3.00,10,32,148,200,3,1
-results_exact/011_train11.kiss2.blif,10.0,2.00,6,15,72,133,2,13
-results_exact/012_modulo12.kiss2.blif,2.0,1.00,5,5,20,40,1,1
-results_exact/014_ex4.kiss2.blif,16.0,2.00,14,23,114,141,2,6
-results_exact/015_dk512.kiss2.blif,6.5,1.00,8,8,40,78,1,60000
-results_exact/020_tma.kiss2.blif,39.5,3.00,11,66,307,453,3,0
-results_exact/024_pma.kiss2.blif,88.5,4.00,13,160,731,941,4,1
+State Machine & Area & Delay & Latch & Runtime\\
+results\_exact/004\_dk15.kiss2.blif & 8.0 & 1.00 & 8 & 0\\
+results\_exact/004\_lion.kiss2.blif & 1.5 & 1.00 & 3 & 0\\
+results\_exact/004\_mc.kiss2.blif & 3.5 & 1.00 & 7 & 0\\
+results\_exact/004\_tav.kiss2.blif & 8.0 & 2.00 & 7 & 1\\
+results\_exact/004\_train4.kiss2.blif & 1.5 & 1.00 & 3 & 0\\
+results\_exact/005\_s8.kiss2.blif & 7.0 & 2.00 & 4 & 0\\
+results\_exact/006\_bbtas.kiss2.blif & 5.0 & 1.00 & 6 & 0\\
+results\_exact/006\_s27.kiss2.blif & 7.5 & 2.00 & 5 & 1\\
+results\_exact/007\_beecount.kiss2.blif & 10.0 & 2.00 & 8 & 0\\
+results\_exact/007\_dk14.kiss2.blif & 8.0 & 1.00 & 8 & 0\\
+results\_exact/007\_dk27.kiss2.blif & 2.5 & 1.00 & 5 & 0\\
+results\_exact/008\_dk17.kiss2.blif & 6.5 & 1.00 & 7 & 1\\
+results\_exact/008\_ex6.kiss2.blif & 30.5 & 3.00 & 12 & 0\\
+results\_exact/008\_shiftreg.kiss2.blif & 1.5 & 1.00 & 4 & 0\\
+results\_exact/009\_ex5.kiss2.blif & 5.0 & 1.00 & 6 & 1\\
+results\_exact/009\_lion9.kiss2.blif & 5.0 & 1.00 & 5 & 0\\
+results\_exact/010\_bbara.kiss2.blif & 21.0 & 3.00 & 7 & 1\\
+results\_exact/010\_ex3.kiss2.blif & 6.0 & 1.00 & 6 & 1\\
+results\_exact/010\_ex7.kiss2.blif & 5.0 & 1.00 & 6 & 0\\
+results\_exact/010\_opus.kiss2.blif & 19.0 & 3.00 & 10 & 1\\
+results\_exact/011\_train11.kiss2.blif & 10.0 & 2.00 & 6 & 13\\
+results\_exact/012\_modulo12.kiss2.blif & 2.0 & 1.00 & 5 & 1\\
+results\_exact/014\_ex4.kiss2.blif & 16.0 & 2.00 & 14 & 6\\
+results\_exact/015\_dk512.kiss2.blif & 6.5 & 1.00 & 8 & 60000\\
+results\_exact/020\_tma.kiss2.blif & 39.5 & 3.00 & 11 & 0\\
+results\_exact/024\_pma.kiss2.blif & 88.5 & 4.00 & 13 & 1\\
