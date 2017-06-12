@@ -24,6 +24,10 @@ Before we solve the encoding problem we need to compute which prime dichotomy co
 \section{Cover Root Dichotomies with Primes}
 Using the before created table it is now possible to look for a minimal set of prime dichotomies that cover all root dichotomies. We start with the small set possible of one prime dichotomy. When no solution is found the search space is increased by one additional element. The combination of elements for the minimal set of prime dichotomies is generator that iterate all combination without repetition. For the $k$ round $\left( n\atop k \right)$ for $n$ table entries are possible.
 
+\section{Encoding Correction}
+
+Its is possible that the chosen prime dichotomies yield a contradicting encoding. Then the resulting encoding is not for each state unique. That handle we by extending the encoding with bits until the result is unique for each state. We implemented this by using Hashset and a counter initialized to $2'b1$. When a encoding is already contained in the hash set then binary value of the counter is added in front of the encoding. For example the encoding $2'b010$ creates a collision the value is changed to $2'b1_010$. Should this was also be already contained the counter is incremented and the encoding changed to $2'b10_010$. During this iterative approach the maximum counter value for all encoding is stored. The resulting bit length for the state encoding is equal to the number of prime dichotomies used plus the first bit position of the maximum counter value. This approach guaranties that all encode symbols are unique and the amount of bits used is minimal.
+
 \section{Optimizations}
 
 The complexity to find an exact solution scales with $\left( n\atop k \right)$, where $n$ is the size of the coverage table and $k$ is the amount of lines that are combined to find a solution. One way to shorten runtime is to reduce the table size. Another way is to find a faster algorithm to search the table, but this comes at the cost of non-exact solutions. It is also desirable to parallelize the process of searching the coverage table to utilize multiple processors.
